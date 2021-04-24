@@ -14,5 +14,6 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 web_app.config["DB"] = db
 
-if __name__ =="__main__":
-    web_app.run(host=web_app.config["HOST"])
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT",5000))
+    web_app.run(debug=True, port=port, host="0.0.0.0")
