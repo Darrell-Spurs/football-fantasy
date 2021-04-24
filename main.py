@@ -14,4 +14,4 @@ db = firestore.client()
 web_app.config["DB"] = db
 
 if __name__ =="__main__":
-    web_app.run(host=web_app.config["HOST"],port=web_app.config["PORT"])
+    web_app.run(host=web_app.config["HOST"])
