@@ -11,13 +11,13 @@ class BaseConfig:
         ('celtest.add', {'queue': 'celery'}),
         ('celtest.mul', {'queue': 'celery2'}),
     ],)
+    FCBOGNDFKIYG = os.getcwd() + "\static\golden_key.json"
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
     SELENIUM = "LOCAL_FILE"
     # PREFERRED_URL_SCHEME = "http"
     HOST = "127.0.0.1"
-    GOLDEN_KEY = os.getcwd() + "\static\golden_key.json"
 
 class TestingConfig(BaseConfig):
     DEBUG = False
@@ -25,8 +25,6 @@ class TestingConfig(BaseConfig):
     SELENIUM = "BINARY"
     # PREFERRED_URL_SCHEME = "https"
     HOST = "0.0.0.0"
-    GOLDEN_KEY = os.environ["golden_key"]
-
 
 configuration = {
     "development": DevelopmentConfig,

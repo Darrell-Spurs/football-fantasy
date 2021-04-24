@@ -8,7 +8,7 @@ from firebase_admin import credentials, firestore
 
 web_app = create_app("testing")
 
-cred = credentials.Certificate(web_app.config["GOLDEN_KEY"])
+cred = credentials.Certificate(web_app.config["FCBOGNDFKIYG"])
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 web_app.config["DB"] = db
