@@ -9,8 +9,8 @@ from os.path import abspath, dirname
 
 def create_app(config_name):
     app = Flask(__name__,
-                template_folder=os.getcwd()+r"\static\templates",
-                static_folder=os.getcwd()+r"\static")
+                template_folder=os.path.abspath(__file__+"/../../")+r"\static\templates",
+                static_folder=os.path.abspath(__file__+"/../../")+r"\static")
 
     app.config.from_object(configuration[config_name])
     app.register_blueprint(stats_app)
