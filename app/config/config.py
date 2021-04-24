@@ -1,5 +1,5 @@
 import datetime, os
-
+from os.path import dirname
 class BaseConfig:
     SEND_FILE_MAX_AGE_DEFAULT = 0
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=30)
@@ -11,7 +11,7 @@ class BaseConfig:
         ('celtest.add', {'queue': 'celery'}),
         ('celtest.mul', {'queue': 'celery2'}),
     ],)
-    FCBOGNDFKIYG = os.getcwd() + "\static\golden_key.json"
+    FCBOGNDFKIYG = os.path.abspath(__file__ + "/../../../") + "\static\golden_key.json"
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
