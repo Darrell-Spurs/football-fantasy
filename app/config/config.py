@@ -1,6 +1,5 @@
 import datetime, os
 
-
 class BaseConfig:
     SEND_FILE_MAX_AGE_DEFAULT = 0
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=30)
@@ -26,7 +25,7 @@ class TestingConfig(BaseConfig):
     SELENIUM = "BINARY"
     # PREFERRED_URL_SCHEME = "https"
     HOST = "0.0.0.0"
-    GOLDEN_KEY = os.environ.get("golden_key")
+    GOLDEN_KEY = os.environ["golden_key"]
 
 
 configuration = {
