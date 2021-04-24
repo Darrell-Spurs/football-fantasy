@@ -11,7 +11,7 @@ class BaseConfig:
         ('celtest.add', {'queue': 'celery'}),
         ('celtest.mul', {'queue': 'celery2'}),
     ],)
-    FCBOGNDFKIYG = os.path.abspath(__file__ + "/../../../../") + "static/golden_key.json"
+    FCBOGNDFKIYG = "golden_key.json"
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
