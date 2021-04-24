@@ -1,0 +1,2 @@
+1 Add heroku worker for CELERY
+2 add heroku env var for chrome driver binary file

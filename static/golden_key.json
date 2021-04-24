@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "fantasy-football-9cd0e",
+  "private_key_id": "00925ec7b6badf6ff732c0ef6bf21aff3896a621",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDNetgmFNjoGxHZ\nuBVxJfqcugyLnebwKtIFb3WSTFm5/zsheStOU+NJdAVQZq2tv06kAdt4lGsgoQoj\nUDKYnrTHQIGB/x/MvKryo4ka8cTdQhss0fZWGW0KZhhZHtH8laKneZxydm2rX7gn\nIMDX08vbdWorMfXXjindWCyjd0S+fG7cOL/U6XDexFG2B2CNugLStHGIfRcPo2Mx\n3cf1cfguhBYG112tQ2gdCIEwrFUr6gUuB/JY6nAYdnev7Yj3StJ/JLx/k0dGZ5/R\nOuskJ8Q0w2f4hrDBa1ev+tJYAL0XFplv/bmK4mN6g5V3CEkZcLMb/KNGtTEpOKO7\nESc0KV0FAgMBAAECggEABtotYhu43gilED8gy+ypzlcv+unxnRm4dkDwyUetiFPY\nG3YoeQy4HCd30+YQraYfD74WHQ/KAMUOCv5uKYPFYI2oo/anj1LNWpkUhecBGyXM\ntTJtRhLD/aBI+JPcCdHNokseafzEDH59LCTd+XSRLEjemQEqAx21DLIXjv33t2hs\nkiilN+hUHoYBpu11oOVohO/Ws9EVD/5LTxPn6/Wsoevm7r13cqiCxo/LIIBGc413\nxGnrwh3rMdec1D0GvkvJHfje7/QR775NgCCd+0SvffsydqgvGJxcy7vMSjjmaV+O\n4uwL7c0UPPc55wVAnjNXZOmuPR7A7ixeOg+o5+4twQKBgQDyM2URoQ5SnBroSo2N\nkVI8cq3ms1kzpjH4v28uCN0TUbvl6gL3KUPFxxc3wsgc6Zc2Gmjx3FIm0cIRGe+F\nhRQcaMvkbOLsDfxOpZVLEpYEcsv63teXsFMN681e38WQRRhCh6mbe5WserUDdJD+\nUYiSpOCBtXWEMuKSatOT98835QKBgQDZL9vk9RDSX7JaJC+Nt5V3vJRRl/ZHM97I\n/ZBlHJiSrjds463mPMjwg+kBtS4UUY+BmvMGzr6rlL1Xby2/ljrDPB/tPJBkJQFW\n3Bkbt//ieAgf3c90ztwIZLNzlZwl0ZZK50g+4CbRHYFGuJgD61hU6YrseD28qr+t\nWLAFQbr+oQKBgFTkdMmAFSAZfUjsUL9NL3DmlVOmi16SIzPYDaUqECskW+LTaiSt\nvwaEqPuvdyrDKXAaQ6x6mATpQsdxusWnBoyKouS20bcBk+0RFsoQgqqefia5kwGl\nGQdpHjvh3UKbJUy0dlt8LtMc03OZmPS7KU6VIef07XLfzxCZBv33PxeNAoGBAJsy\nLtDiKd4akgkF2JFNQVppgBb6HvtsXmODhd4q2//czDBcVdSzVOdBa4xT2pScX46+\nmbEgpXFYfSBwiuFfyaffW/UblRZqtxVJfAuppQlAupWC3A7dDrBUvUL4Arenl9z4\nflCnvjUp/0n4+G+8icdLh4FIvt0FqqiFOmrXOHdhAoGACar4yvRKzKPisc7PpEle\n+Sbb4lulw6w5YuUcupXK2A3tbAbwkexV4vr6j03zfI2qi0XoR3bOhVsRLCJOpLlc\nHeHsbZlp63XZmmAjndYWJrLUegzdXig/gn9rFNYUy0GB2NBu7yFyWYyO7r4GN/hJ\nyXqmkTEh69hNEyrU3HBmUKk=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-91zg5@fantasy-football-9cd0e.iam.gserviceaccount.com",
+  "client_id": "114877294751611560964",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-91zg5%40fantasy-football-9cd0e.iam.gserviceaccount.com"
+}

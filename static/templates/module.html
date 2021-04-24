@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="football_fantasy_app">
+    <meta name="theme-color" content="#ECF6FF">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/static/manifest.json" crossorigin="use-credentials">
+    <link rel="shortcut icon" href="/static/favicon.ico">
+    <!---extra css--->
+    {% block style_list %}
+    {% endblock %}
+    
+    <!---Title--->
+    {% block title %}
+    <title>Module</title>
+    {% endblock %}
+
+    {% block register %}
+    {% endblock %}
+    <!---Main.js-->
+
+
+
+    <!-- For Apple -->
+    <link rel="apple-touch-icon" sizes="96x96" href="static/images/icon_96.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="static/images/icon_192.png">
+    <link rel="apple-touch-startup-image" href="static/images/icon_512.png">
+    <meta name="apple-mobile-web-app-title" content="Football Fantasy">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#ECF6FF-translucent">
+    <meta name="format-detection"  content="telephone=no">
+
+
+    <!-- CSS stylesheets -->
+    <link rel="stylesheet" href="/static/stylesheets/module.css">
+    
+    <!-- Extra Links -->
+    {% block links %}
+    {% endblock %}
+
+    
+    <nav class="upper-nav">
+        <div class="nav-list">        
+            <span class="nav-item"><a href="/">HOME</a></span>
+            <span class="nav-item">NEWS</span>
+            <span class="nav-item">SCORES</span>
+            <span class="nav-item">ABOUT US</span>
+        </div>
+
+    </nav>
+    <img class="top-bg-img" src="/static/images/background.jpg" alt="background">
+    <nav class="lower-nav">
+        <div class="nav-list">
+            <span class="nav-item"><a href="/stats/roster">ROSTER</a></span>
+            <span class="nav-item">MATCHUP</span>
+            <span class="nav-item">TRANSACTION</span>
+            <span class="nav-item">STANDINGS</span>
+            </span>
+        </div>
+    </nav>
+</head>
+
+<body id="meta-container">
+
+    {% block body %}
+    {% endblock %}
+
+    <!-- JQuery, Bootstrap, Socket -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="crossorigin="anonymous"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script> -->
+
+
+    <!-- FIREBASE -->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+
+
+    <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+        apiKey: "AIzaSyCVz2PG8PgloOgM07ABO9jCgPKVOIDXpjI",
+        authDomain: "fantasy-football-9cd0e.firebaseapp.com",
+        projectId: "fantasy-football-9cd0e",
+        storageBucket: "fantasy-football-9cd0e.appspot.com",
+        messagingSenderId: "351265801266",
+        appId: "1:351265801266:web:d6687ef9120e8a5392a82b",
+        measurementId: "G-D9TFF9L4C2"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore();
+    </script>
+    <script src="/static/js/module.js"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>
+

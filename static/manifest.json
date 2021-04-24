@@ -1,0 +1,30 @@
+{
+    "short_name":"Fantasy",
+    "name":"Football Fantasy App",
+    "icons":
+    [
+    { "src": "/static/images/icon_96.png","sizes": "96x96" },
+    { "src": "/static/images/icon_192.png","sizes": "192x192" },
+    { "src": "/static/images/icon_512.png","sizes": "512x512" }
+    ],
+    "background_color": "#2EACFE",
+    "theme_color":"#ECF6FF",
+    "orientation":"portrait",
+    "scope":"/",
+    "start_url":"/",
+    "display_override":["standalone"],
+    "display": "standalone",
+    "shortcuts":[
+        {
+            "name":"Check Roster",
+            "short_name":"roster",
+            "description":"Check the roster for tomorrow",
+            "url":"/stats/roster",
+            "icons":
+            [{ 
+                "src": "/static/images/icon_512.png",
+                "type": "image/png",
+                "sizes": "512x512" }]            
+            }
+    ]
+}

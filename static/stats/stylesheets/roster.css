@@ -1,0 +1,21 @@
+.roster-table{
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 2px solid black;
+    border-bottom: 1px solid black;
+}
+
+.add-player{
+    margin: 7px 7px 7px 7px;
+}
+.player-profile>td{
+    color:black;
+}
+.roster-table td{
+    text-align: center;
+    width: 5%;
+    font-size: 16px;
+}
+.roster-table thead{
+    font-weight: bold;
+}

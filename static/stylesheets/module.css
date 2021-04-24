@@ -1,0 +1,75 @@
+/* Universal settings */
+*{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+html,body{
+    height: 100%;
+    position: fixed;
+    margin: 0;
+    overflow: scroll;
+}
+
+a{
+    text-decoration: None;
+}
+
+/* Variables */
+:root{
+    --bar-color: rgba(176, 230, 252, 0.932);
+    --lh-multiple: 2.5;
+}
+
+/* nav bar settings */
+.top-bg-img{
+    top: 5vh;
+    position: fixed;
+    width: 100%; 
+    height: 10%;
+    opacity: 60%;
+}
+
+#meta-container{
+    top: 15vh;
+    bottom: 5vh;
+}
+
+.upper-nav{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: var(--bar-color);
+}
+.upper-nav>.nav-list{
+    display: flex;
+    font-size: 2vh;
+}
+.upper-nav>.nav-list>.nav-item{
+    line-height: var(--lh-multiple);
+    text-align: center;
+    width: 25%;
+}
+.upper-nav>.nav-list>.nav-item:hover{
+    background-color: rgba(116, 154, 199, 0.932);
+}
+.lower-nav{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--bar-color);
+}
+
+.lower-nav>.nav-list{
+    display: flex;
+    font-size: 2vh;
+}
+
+.lower-nav>.nav-list>.nav-item{
+    line-height: var(--lh-multiple);
+    text-align: center;
+    width: 25%;
+}
+.lower-nav>.nav-list>.nav-item:hover{
+    color: white;
+    background-color: rgba(90, 45, 173, 0.644);
+}

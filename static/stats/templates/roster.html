@@ -1,0 +1,40 @@
+{% extends "module.html" %}
+
+{% block links %}
+    <link rel="stylesheet" href="/static/stats/stylesheets/roster.css">
+{%  endblock %}
+{% block body %}
+<form class="add-form" type="post" autocomplete="off">
+    <label for="name">Name: &nbsp;</label><input type="text" id="name"><br>
+    <label for="pos">Position: &nbsp;</label><input type="text" id="pos"><br>
+    <label for="nation">Nation: &nbsp;</label><input type="text" id="nation"><br>
+    <label for="team">Team: &nbsp;</label><input type="text" id="team"><br>
+    <input type="submit" value="Submit">
+</form>
+<table class="roster-table">
+    <thead>
+        <tr>
+            <td>W</td>
+            <td>G</td>
+            <td>SHO</td>
+            <td>A</td>
+            <td>PS</td>
+            <td>P%</td>
+            <td>TAC</td>
+            <td>INT</td>
+            <td>CLE</td>
+            <td>CD</td>
+            <td>SV</td>
+        </tr>
+    </thead>
+    <tbody class="roster">
+
+    </tbody>
+</table>
+
+{% endblock %}
+{% block scripts %}
+    <script src="/static/js/roster.js"></script>
+    <script src="/static/js/roster-db.js"></script>
+{% endblock %}
+
