@@ -11,7 +11,6 @@ httplib2===0.18.1
 Jinja2===2.11.2
 kombu===4.6.11
 MarkupSafe===1.1.1
-numpy===1.19.1
 redis===3.5.3
 requests===2.24.0
 selenium===3.141.0

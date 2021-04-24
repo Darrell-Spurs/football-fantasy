@@ -12,7 +12,6 @@ def create_app(config_name):
                 template_folder=os.getcwd()+r"\static\templates",
                 static_folder=os.getcwd()+r"\static")
 
-
     app.config.from_object(configuration[config_name])
     app.register_blueprint(stats_app)
 

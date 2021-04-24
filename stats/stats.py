@@ -1,24 +1,17 @@
 from flask import Blueprint
-from flask import render_template
+from flask import render_template, current_app, url_for
 import os, json
-
 
 stats_app = Blueprint("stats_app",__name__,
                       url_prefix="/stats",
                       template_folder=os.getcwd()+r"\static\stats\templates"
                       )
 
-import firebase_admin
-from firebase_admin import credentials, firestore
-
-cred = credentials.Certificate(os.getcwd() + "\static\golden_key.json")
-firebase_admin.initialize_app(cred)
-
-db = firestore.client()
 
 @stats_app.route("/")
 def stats_default():
-    doc = db.collection(u'roster').document(u'Paulo_Dybala').get()
+    db = current_app.config["DB"]
+    doc = db.collection(u'roster').document(u'Weston_McKinnie').get()
 
     player = {
         "nation": u"Argentina",
