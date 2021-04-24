@@ -12,6 +12,7 @@ def create_app(config_name):
                 template_folder=os.path.abspath(__file__+"/../../")+r"\static\templates",
                 static_folder=os.path.abspath(__file__+"/../../")+r"\static")
     print(os.path.abspath(__file__+"/../../")+r"\static\templates")
+
     app.config.from_object(configuration[config_name])
     app.register_blueprint(stats_app)
 
