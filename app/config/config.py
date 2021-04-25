@@ -28,8 +28,8 @@ class TestingConfig(BaseConfig):
     SELENIUM = "BINARY"
     # PREFERRED_URL_SCHEME = "https"
     HOST = "0.0.0.0"
-    TEMPLATE_FOLDER = r"/../static/templates"
-    STATIC_FOLDER = r"/../static"
+    TEMPLATE_FOLDER =os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),"static","templates")
+    STATIC_FOLDER = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),"static")
 
 configuration = {
     "development": DevelopmentConfig,
