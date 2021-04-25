@@ -19,8 +19,8 @@ class DevelopmentConfig(BaseConfig):
     SELENIUM = "LOCAL_FILE"
     # PREFERRED_URL_SCHEME = "http"
     HOST = "127.0.0.1"
-    TEMPLATE_FOLDER = os.path.abspath(os.getcwd())+r"/static/templates"
-    STATIC_FOLDER = os.path.abspath(os.getcwd())+r"/static"
+    TEMPLATE_FOLDER = os.getcwd()+r"\static\templates"
+    STATIC_FOLDER = os.getcwd()+r"\static"
 
 class TestingConfig(BaseConfig):
     DEBUG = False
@@ -28,8 +28,8 @@ class TestingConfig(BaseConfig):
     SELENIUM = "BINARY"
     # PREFERRED_URL_SCHEME = "https"
     HOST = "0.0.0.0"
-    TEMPLATE_FOLDER = "/static/templates"
-    STATIC_FOLDER = "/static"
+    TEMPLATE_FOLDER = r"/static/templates"
+    STATIC_FOLDER = r"/static"
 
 configuration = {
     "development": DevelopmentConfig,

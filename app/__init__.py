@@ -10,15 +10,13 @@ from os.path import abspath, dirname
 def create_app(config_name):
     app = Flask(__name__)
 
-
     app.config.from_object(configuration[config_name])
     app.register_blueprint(stats_app)
 
     app.template_folder = app.config["TEMPLATE_FOLDER"]
     app.static_folder = app.config["STATIC_FOLDER"]
     print(app.config["TEMPLATE_FOLDER"])
-    print(os.path.dirname(os.getcwd()))
-
+    print(app.config["STATIC_FOLDER"])
 
     @app.errorhandler(404)
     def page_not_found(e):
