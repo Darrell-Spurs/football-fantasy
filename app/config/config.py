@@ -12,6 +12,7 @@ class BaseConfig:
         ('celtest.mul', {'queue': 'celery2'}),
     ],)
     FCBOGNDFKIYG = "golden_key.json"
+    EXPLAIN_TEMPLATE_LOADING = True
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
@@ -27,8 +28,8 @@ class TestingConfig(BaseConfig):
     SELENIUM = "BINARY"
     # PREFERRED_URL_SCHEME = "https"
     HOST = "0.0.0.0"
-    TEMPLATE_FOLDER = os.path.abspath(os.getcwd()+"/../")+r"static/templates"
-    STATIC_FOLDER = os.path.abspath(os.getcwd()+"/../")+r"static"
+    TEMPLATE_FOLDER = "/static/templates"
+    STATIC_FOLDER = "/static"
 
 configuration = {
     "development": DevelopmentConfig,

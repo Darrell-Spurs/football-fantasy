@@ -6,7 +6,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 
-web_app = create_app("testing")
+web_app = create_app("development")
 
 
 cred = credentials.Certificate(web_app.config['FCBOGNDFKIYG'])
