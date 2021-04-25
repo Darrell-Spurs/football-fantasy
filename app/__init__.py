@@ -8,14 +8,16 @@ from os.path import abspath, dirname
 
 
 def create_app(config_name):
-    app = Flask(__name__,
-                template_folder=os.path.abspath(os.getcwd())+r"/static/templates",
-                static_folder=os.path.abspath(os.getcwd())+r"/static")
-    print(os.path.abspath(__file__+"/../../")+r"/static/templates")
-    print(os.path.abspath(os.getcwd())+r"/static/templates")
+    app = Flask(__name__)
+
 
     app.config.from_object(configuration[config_name])
     app.register_blueprint(stats_app)
+
+    app.template_folder = app.config["TEMPLATE_FOLDER"]
+    app.static_folder = app.config["STATIC_FOLDER"]
+    print(app.config["TEMPLATE_FOLDER"])
+
 
     @app.errorhandler(404)
     def page_not_found(e):
