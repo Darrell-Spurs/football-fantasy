@@ -17,6 +17,7 @@ def create_app(config_name):
     app.template_folder = app.config["TEMPLATE_FOLDER"]
     app.static_folder = app.config["STATIC_FOLDER"]
     print(app.config["TEMPLATE_FOLDER"])
+    print(os.path.dirname(os.getcwd()))
 
 
     @app.errorhandler(404)
