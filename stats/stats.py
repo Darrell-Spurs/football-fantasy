@@ -4,7 +4,7 @@ import os, json
 
 stats_app = Blueprint("stats_app",__name__,
                       url_prefix="/stats",
-                      template_folder=os.getcwd()+r"\static\stats\templates"
+                      template_folder=os.getcwd()+r"/static/stats/templates"
                       )
 
 

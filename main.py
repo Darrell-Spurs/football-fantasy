@@ -6,9 +6,10 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 
-web_app = create_app("testing")
+web_app = create_app("development")
 # development
 # testing
+print(web_app.root_path)
 
 cred = credentials.Certificate(web_app.config['FCBOGNDFKIYG'])
 firebase_admin.initialize_app(cred)

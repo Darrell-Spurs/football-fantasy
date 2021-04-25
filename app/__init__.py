@@ -17,7 +17,7 @@ def create_app(config_name):
     app.static_folder = app.config["STATIC_FOLDER"]
     print(app.config["TEMPLATE_FOLDER"])
     print(app.config["STATIC_FOLDER"])
-
+    print(os.getcwd())
     @app.errorhandler(404)
     def page_not_found(e):
         return render_template("error/404.html"), 404

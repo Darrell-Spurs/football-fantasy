@@ -28,8 +28,8 @@ class TestingConfig(BaseConfig):
     SELENIUM = "BINARY"
     # PREFERRED_URL_SCHEME = "https"
     HOST = "0.0.0.0"
-    TEMPLATE_FOLDER = r"/static/templates"
-    STATIC_FOLDER = r"/static"
+    TEMPLATE_FOLDER = r"/../static/templates"
+    STATIC_FOLDER = r"/../static"
 
 configuration = {
     "development": DevelopmentConfig,
