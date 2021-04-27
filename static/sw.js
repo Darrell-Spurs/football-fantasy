@@ -1,5 +1,5 @@
-const CACHE_NAME = 'static-cache-0.0.28'
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-0.0.18'
+const CACHE_NAME = 'static-cache-0.1.0'
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-0.1.0'
 const FILES_TO_CACHE=[
     //routes
     "/",
@@ -8,7 +8,11 @@ const FILES_TO_CACHE=[
     "/static/favicon.ico",
     "/static/manifest.json",
     "/static/images/icon_92.png",
-    // "/static/images/icon_96.png",
+    "/static/images/icon_96.png",
+    "/static/images/icon_120.png",
+    "/static/images/icon_152.png",
+    "/static/images/icon_167.png",
+    "/static/images/icon_180.png",
     "/static/images/icon_192.png",
     "/static/images/icon_512.png",
     "/static/images/background.jpg",

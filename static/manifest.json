@@ -1,11 +1,16 @@
 {
     "short_name":"Fantasy",
-    "name":"Football Fantasy App",
+    "name":"Football Fantasy",
     "icons":
     [
-    { "src": "/static/images/icon_96.png","sizes": "96x96" },
-    { "src": "/static/images/icon_192.png","sizes": "192x192" },
-    { "src": "/static/images/icon_512.png","sizes": "512x512" }
+        { "src": "/static/images/icon_92.png","sizes": "92x92","type":"image/png" },
+        { "src": "/static/images/icon_96.png","sizes": "96x96","type":"image/png" },
+        { "src": "/static/images/icon_120.png","sizes": "120x120","type":"image/png" },
+        { "src": "/static/images/icon_152.png","sizes": "152x152","type":"image/png" },
+        { "src": "/static/images/icon_167.png","sizes": "167x167","type":"image/png" },
+        { "src": "/static/images/icon_180.png","sizes": "180x180","type":"image/png" },
+        { "src": "/static/images/icon_192.png","sizes": "192x192" },
+        { "src": "/static/images/icon_512.png","sizes": "512x512" }
     ],
     "background_color": "#2EACFE",
     "theme_color":"#ECF6FF",
@@ -14,6 +19,7 @@
     "start_url":"/",
     "display_override":["standalone"],
     "display": "standalone",
+    "description":"An App for Fantasy Football(Soccer)",
     "shortcuts":[
         {
             "name":"Check Roster",
