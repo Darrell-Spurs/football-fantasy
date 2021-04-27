@@ -21,6 +21,7 @@ const renderRoster = (data, id) =>{
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
         </tr>
     `
     roster.innerHTML += html

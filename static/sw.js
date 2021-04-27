@@ -1,5 +1,5 @@
-const CACHE_NAME = 'static-cache-0.1.0'
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-0.1.0'
+const CACHE_NAME = 'static-cache-0.1.1'
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-0.1.1'
 const FILES_TO_CACHE=[
     //routes
     "/",
