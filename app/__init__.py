@@ -2,7 +2,7 @@ from flask import Flask, Blueprint
 from flask import redirect, url_for, request, render_template
 from .config.config import configuration
 from stats.stats import stats_app
-import time, json, sys, os
+import time, json, sys, os, random
 from os.path import abspath, dirname
 
 
@@ -32,13 +32,34 @@ def create_app(config_name):
     def startcel():
         from celtest import fetch_api
         sig = fetch_api.s("https://fly.sportsdata.io/v3/soccer/stats/json/BoxScores/2021-03-18?key=de299c30471d4f1ca5619cb2771bb408")
-        task = sig.apply_async()
+        task = sig.apply_async(id="drake")
         return redirect(f"/getcel/{task.id}")
 
     @app.route("/getcel/<tid>")
     def getcel(tid):
         from celtest import celery
         return celery.AsyncResult(id=tid).get(timeout=2)[0]
+
+    @app.route("/activate")
+    def activate_fc():
+        from celtest import cs_fetch
+        cs_sig = cs_fetch.s()
+        bg_task = cs_sig.apply_async(task_id = "bg_task")
+        return redirect("/")
+
+    @app.route("/check")
+    def get_bg_res():
+        from celtest import celery
+        if celery.AsyncResult(id = "bg_task").status =="PENDING":
+            return "Fetch in Process"
+        elif celery.AsyncResult(id="bg_task").status == "SUCCESS":
+            return {i:j for i,j in enumerate(celery.AsyncResult(id="bg_task").get())}
+        elif celery.AsyncResult(id="bg_task").status =="FAILED":
+            return "Fetch Failed"
+
+    @app.route('/favicon.ico', methods=['GET'])
+    def favicon():
+        return app.send_static_file('favicon.ico')
 
     @app.route('/sw.js', methods=['GET'])
     def sw():
@@ -47,6 +68,7 @@ def create_app(config_name):
     @app.route('/offline', methods=['GET'])
     def offline():
         return render_template("offline.html")
+
 
     return app
 

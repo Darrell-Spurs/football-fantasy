@@ -5,8 +5,6 @@ class BaseConfig:
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=30)
     SECRET_KEY = os.urandom(12)
     PORT = 5000
-    CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
-    CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
     TASK_ROUTES = ([
         ('celtest.add', {'queue': 'celery'}),
         ('celtest.mul', {'queue': 'celery2'}),
@@ -21,6 +19,8 @@ class DevelopmentConfig(BaseConfig):
     HOST = "127.0.0.1"
     TEMPLATE_FOLDER = os.getcwd()+r"\static\templates"
     STATIC_FOLDER = os.getcwd()+r"\static"
+    CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+    CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 
 class TestingConfig(BaseConfig):
     DEBUG = False
@@ -30,6 +30,8 @@ class TestingConfig(BaseConfig):
     HOST = "0.0.0.0"
     TEMPLATE_FOLDER = r"/app/static/templates"
     STATIC_FOLDER = r"/app/static"
+    CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
+    CELERY_BROKER_URL = os.environ.get("REDIS_URL")
 
 configuration = {
     "development": DevelopmentConfig,
