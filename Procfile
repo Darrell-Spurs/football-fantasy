@@ -1,2 +1,2 @@
-worker: celery -A celtest worker --loglevel=INFO -P eventlet
+worker: celery worker --app=celtest --loglevel=INFO -P eventlet
 web: python main.py

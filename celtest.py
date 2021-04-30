@@ -63,6 +63,7 @@ def cs_fetch(test=False):
                                   options=options)
 
     elif SELENIUM == "BINARY": # Testing/Formal stage
+        print("BINARY")
         options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
         options.add_argument('--headless')
         options.add_argument('--disable-dev-shm-usage')
