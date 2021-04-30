@@ -32,7 +32,7 @@ def create_app(config_name):
     def activate_fc():
         from celtest import cs_fetch
         cs_sig = cs_fetch.s()
-        bg_task = cs_sig.apply_async()
+        bg_task = cs_sig.apply_async(serializer='json')
         return redirect(f"/check/{bg_task.id}")
 
     @app.route("/check/<tid>")

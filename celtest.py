@@ -120,3 +120,4 @@ def cs_fetch(test=False):
     return ulrs
 
 # celery -A celtest worker --loglevel=INFO -P eventlet
+# --loglevel=INFO -P eventlet
