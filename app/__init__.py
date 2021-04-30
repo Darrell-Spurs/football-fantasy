@@ -28,36 +28,25 @@ def create_app(config_name):
     def home_page():
         return render_template("home.html")
 
-    @app.route("/startcel")
-    def startcel():
-        from celtest import fetch_api
-        sig = fetch_api.s("https://fly.sportsdata.io/v3/soccer/stats/json/BoxScores/2021-03-18?key=de299c30471d4f1ca5619cb2771bb408")
-        task = sig.apply_async(id="drake")
-        return redirect(f"/getcel/{task.id}")
-
-    @app.route("/getcel/<tid>")
-    def getcel(tid):
-        from celtest import celery
-        return celery.AsyncResult(id=tid).get(timeout=2)[0]
-
     @app.route("/activate")
     def activate_fc():
         from celtest import cs_fetch
         cs_sig = cs_fetch.s()
-        bg_task = cs_sig.apply_async(task_id = "bg_task")
-        return redirect("/")
+        bg_task = cs_sig.apply_async()
+        return redirect(f"/check/{bg_task.id}")
 
-    @app.route("/check")
-    def get_bg_res():
+    @app.route("/check/<tid>")
+    def get_bg_res(tid):
         from celtest import celery
-        if celery.AsyncResult(id = "bg_task").status =="PENDING":
+        state = celery.AsyncResult(id=tid).status
+        if state =="PENDING":
             return "Fetch in Process"
-        elif celery.AsyncResult(id="bg_task").status == "SUCCESS":
-            return {i:j for i,j in enumerate(celery.AsyncResult(id="bg_task").get())}
-        elif celery.AsyncResult(id="bg_task").status =="FAILED":
+        elif state == "SUCCESS":
+            return {i:j for i,j in enumerate(celery.AsyncResult(id=tid).get(timeout=100))}
+        elif state =="FAILED":
             return "Fetch Failed"
 
-    @app.route('/favicon.ico', methods=['GET'])
+    @app.route('/static/favicon.ico', methods=['GET'])
     def favicon():
         return app.send_static_file('favicon.ico')
 

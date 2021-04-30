@@ -50,75 +50,72 @@ def fetch_api(url):
 
 @celery.task()
 def cs_fetch(test=False):
-    try:
-        print("GO")
-        options = webdriver.ChromeOptions()
-        SELENIUM = celery.conf['SELENIUM']
+    print("GO")
+    options = webdriver.ChromeOptions()
+    SELENIUM = celery.conf['SELENIUM']
 
-        # Check current status to decide how to execute Chrome Driver
-        if SELENIUM == "LOCAL_FILE": # Development stage
-            if not test:
-                options.add_argument('--headless')
-                pass
-            driver = webdriver.Chrome(executable_path=r"C:\Users\darre\chromedriver.exe",
-                                      options=options)
-
-        elif SELENIUM == "BINARY": # Testing/Formal stage
-            options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    # Check current status to decide how to execute Chrome Driver
+    if SELENIUM == "LOCAL_FILE": # Development stage
+        if not test:
             options.add_argument('--headless')
-            options.add_argument('--disable-dev-shm-usage')
-            options.add_argument('--no-sandbox')
-            driver = webdriver.Chrome(executable_path=os.environ.get("CHROME_DRIVER_PATH"),
-                                      options=options)
+            pass
+        driver = webdriver.Chrome(executable_path=r"C:\Users\darre\chromedriver.exe",
+                                  options=options)
 
-        else:
-            raise("SELENIUM configuration error")
+    elif SELENIUM == "BINARY": # Testing/Formal stage
+        options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        options.add_argument('--headless')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--no-sandbox')
+        driver = webdriver.Chrome(executable_path=os.environ.get("CHROME_DRIVER_PATH"),
+                                  options=options)
 
-        driver.get("https://www.footballcritic.com/#2021-3-8")
-        print(f"Getting: {driver.current_url}")
-        driver.implicitly_wait(30)
-        time.sleep(3)
+    else:
+        raise("SELENIUM configuration error")
 
-        # notification handler
-        if test:
-            print("test")
-            no_thanks = driver.find_element_by_xpath("/html/body/div[4]/div/div/div[2]/button[2]")
-            ActionChains(driver).click(no_thanks).perform()
-            agree = driver.find_element_by_xpath("/html/body/div[1]/div/div/div/div[2]/div/button[2]")
-            ActionChains(driver).click(agree).perform()
+    driver.get("https://www.footballcritic.com/#2021-3-8")
+    print(f"Getting: {driver.current_url}")
+    driver.implicitly_wait(30)
+    time.sleep(3)
 
-        # main scraper
-        def get_top_players():
-            things = driver.find_elements_by_css_selector(
-                "table[class='playerList halfList list_A']>tbody>tr>td:nth-child(3)>a"
-            )
-            for thing in things:
-                got_url = thing.get_attribute("href")
-                print(got_url+"\n" if "squad" not in got_url else "", end="")
+    # notification handler
+    if test:
+        print("test")
+        no_thanks = driver.find_element_by_xpath("/html/body/div[4]/div/div/div[2]/button[2]")
+        ActionChains(driver).click(no_thanks).perform()
+        agree = driver.find_element_by_xpath("/html/body/div[1]/div/div/div/div[2]/div/button[2]")
+        ActionChains(driver).click(agree).perform()
 
-        def get_todays_games():
+    # main scraper
+    def get_top_players():
+        things = driver.find_elements_by_css_selector(
+            "table[class='playerList halfList list_A']>tbody>tr>td:nth-child(3)>a"
+        )
+        for thing in things:
+            got_url = thing.get_attribute("href")
+            print(got_url+"\n" if "squad" not in got_url else "", end="")
 
-            available_leagues=["England","Spain"]
-            game_links = []
+    def get_todays_games():
 
-            leagues = driver.find_elements_by_css_selector("div[class~='info-block']")
-            for league in leagues:
-                league_name = league.find_element_by_css_selector("div>span:nth-child(2)>span")
+        available_leagues=["England","Spain"]
+        game_links = []
 
-                if league_name.text in available_leagues:
-                    games = league.find_elements_by_css_selector('ul>li>a')
-                    for game in games:
-                        game_links.append(game.get_attribute("href").replace("match-stats","player-stats"))
+        leagues = driver.find_elements_by_css_selector("div[class~='info-block']")
+        for league in leagues:
+            league_name = league.find_element_by_css_selector("div>span:nth-child(2)>span")
 
-            return list(set(game_links))
+            if league_name.text in available_leagues:
+                games = league.find_elements_by_css_selector('ul>li>a')
+                for game in games:
+                    game_links.append(game.get_attribute("href").replace("match-stats","player-stats"))
 
-        ulrs = get_todays_games()
-        driver.implicitly_wait(80)
+        return list(set(game_links))
 
-        # closure
-        driver.close(   )
-        return ulrs
-    except SoftTimeLimitExceeded:
-        clean_up_in_a_hurry()
+    ulrs = get_todays_games()
+    driver.implicitly_wait(80)
+
+    # closure
+    driver.close()
+    return ulrs
 
 # celery -A celtest worker --loglevel=INFO -P eventlet
