@@ -10,7 +10,6 @@ web_app = create_app("testing")
 # development
 # testing
 
-print(web_app.root_path)
 
 
 if __name__ == '__main__':
@@ -20,3 +19,4 @@ if __name__ == '__main__':
     web_app.config["DB"] = db
     port = int(os.environ.get("PORT",5000))
     web_app.run(debug=True, port=port, host=web_app.config["HOST"])
+

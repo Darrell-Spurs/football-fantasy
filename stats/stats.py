@@ -11,7 +11,7 @@ stats_app = Blueprint("stats_app",__name__,
 @stats_app.route("/")
 def stats_default():
     db = current_app.config["DB"]
-    doc = db.collection(u'roster').document(u'Weston_McKinnie').get()
+    doc = db.collection(u'roster').document(u'Paulo_Dybala').get()
 
     player = {
         "nation": u"Argentina",
@@ -22,8 +22,7 @@ def stats_default():
     update = {
         u"position": u"RW"
     }
-    # db.collection(u'roster').document(u'Paulo_Dybala').set(player)
-    db.collection(u'roster').document(u'Paulo_Dybala').update(update)
+    db.collection(u'roster').document(u'Paulo_Dybala').set(player)
 
     return doc.to_dict()
 
