@@ -30,9 +30,9 @@ def create_app(config_name):
 
     @app.route("/activate")
     def activate_fc():
-        from celtest import test
-        ttask = test.s()
-        bg_task = ttask.apply_async(serializer='json')
+        from celtest import playerstats_fetch
+        playerstats_sig = playerstats_fetch.s()
+        bg_task = playerstats_sig.apply_async(serializer='json')
         return redirect(f"/check/{bg_task.id}")
 
     @app.route("/check/<tid>")
@@ -42,14 +42,13 @@ def create_app(config_name):
         if state =="PENDING":
             return "Fetch in Process"
         elif state == "SUCCESS":
-            return celery.AsyncResult(id=tid).get()
-        #     db = app.config["DB"]
-        #     game_log = celery.AsyncResult(id=tid).get()
-        #     for player in game_log:
-        #         db.collection("roster").document(player["Name"]).set(player)
-        #         print(player["Name"])
-        #         print(player)
-        #     return {i:j for i,j in enumerate(celery.AsyncResult(id=tid).get())}
+            # db = app.config["DB"]
+            # game_log = celery.AsyncResult(id=tid).get()
+            # for player in game_log:
+            #     db.collection("roster").document(player["Name"]).set(player)
+            #     print(player["Name"])
+            #     print(player)
+            return {i:j for i,j in enumerate(celery.AsyncResult(id=tid).get())}
         elif state =="FAILED":
             return "Fetch Failed"
 
