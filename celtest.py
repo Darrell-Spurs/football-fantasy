@@ -250,3 +250,20 @@ def playerstats_fetch(test=False):
 
 # celery -A celtest worker --loglevel=INFO -P eventlet
 # --loglevel=INFO -P eventlet
+
+@celery.task()
+def test():
+    import firebase_admin
+    from firebase_admin import credentials, firestore
+    cred = credentials.Certificate(web_app.config['FCBOGNDFKIYG'])
+    print(cred)
+    firebase_admin.initialize_app(cred)
+    db = firestore.client()
+    print(db)
+    try:
+        doc = db.collection(u'roster').document(u'ywset3pKms8n4lpu4Ba0')
+        res = doc.get()
+        print("dict")
+        print(res.to_dict())
+    except Exception as e:
+        raise(e)
