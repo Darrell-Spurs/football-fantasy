@@ -40,7 +40,7 @@
 
 
     <!-- CSS stylesheets -->
-    <link rel="stylesheet" href="/static/stylesheets/module.css">
+    <link rel="stylesheet" href="/static/stylesheets/module.css" type="text/css">
     
     <!-- Extra Links -->
     {% block links %}
@@ -51,8 +51,15 @@
         <div class="nav-list">        
             <span class="nav-item"><a href="/">HOME</a></span>
             <span class="nav-item">NEWS</span>
-            <span class="nav-item">SCORES</span>
-            <span class="nav-item">ABOUT US</span>
+            {% if not auth_user.login %}
+            <span class="nav-item" id="login"><a href="/signup">SIGN UP</a></span>
+            <span class="nav-item" id="login"><a href="/login">LOG IN</a></span>
+            {% endif %}
+            {% if auth_user.login %}
+            <span class="nav-item">Username</span>
+            <span class="nav-item">Profile</span>
+            {% endif %}
+
         </div>
 
     </nav>
@@ -61,7 +68,7 @@
         <div class="nav-list">
             <span class="nav-item"><a href="/stats/roster">ROSTER</a></span>
             <span class="nav-item">MATCHUP</span>
-            <span class="nav-item">TRANSACTION</span>
+            <span class="nav-item"><a href="/stats/transactions">TRANSACTION</a></span>
             <span class="nav-item">STANDINGS</span>
             </span>
         </div>
@@ -75,14 +82,17 @@
 
     <!-- JQuery, Bootstrap, Socket -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="crossorigin="anonymous"></script>
-    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script> -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script> -->
 
 
     <!-- FIREBASE -->
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
 
 
     <script>
@@ -103,6 +113,8 @@
     const db = firebase.firestore();
     </script>
     <script src="/static/js/module.js"></script>
+
+    
     {% block scripts %}
     {% endblock %}
 </body>

@@ -1,16 +1,20 @@
 from flask import Flask, Blueprint
-from flask import redirect, url_for, request, render_template
+from flask import redirect, url_for, request, render_template, jsonify
 from .config.config import configuration
-from stats.stats import stats_app
 import time, json, sys, os, random
 from os.path import abspath, dirname
+from celery import Celery
+from modules import LoginForm, SignupForm
 
-
+celery = Celery(__name__)
+celery.config_from_object('tasks.celconfig')
 
 def create_app(config_name):
     app = Flask(__name__)
 
     app.config.from_object(configuration[config_name])
+
+    from stats.stats import stats_app
     app.register_blueprint(stats_app)
 
     app.template_folder = app.config["TEMPLATE_FOLDER"]
@@ -24,16 +28,27 @@ def create_app(config_name):
     def interal_server_error(e):
         return render_template("error/500.html"), 500
 
+    @app.context_processor
+    def check_status():
+        auth_user = {
+            "login": False,
+            "profile": {}
+        }
+        return dict(auth_user=auth_user)
+
     @app.route("/")
     def home_page():
         return render_template("home.html")
 
-    @app.route("/activate")
-    def activate_fc():
-        from celtest import playerstats_fetch
-        playerstats_sig = playerstats_fetch.s()
-        bg_task = playerstats_sig.apply_async(serializer='json')
-        return redirect(f"/check/{bg_task.id}")
+    @app.route("/login")
+    def login():
+        form = LoginForm()
+        return render_template("login.html",form=form)
+
+    @app.route("/signup")
+    def signup():
+        form = SignupForm()
+        return render_template("signup.html",form=form)
 
     @app.route("/check/<tid>")
     def get_bg_res(tid):
@@ -42,13 +57,10 @@ def create_app(config_name):
         if state =="PENDING":
             return "Fetch in Process"
         elif state == "SUCCESS":
-            # db = app.config["DB"]
-            # game_log = celery.AsyncResult(id=tid).get()
-            # for player in game_log:
-            #     db.collection("roster").document(player["Name"]).set(player)
-            #     print(player["Name"])
-            #     print(player)
-            return {i:j for i,j in enumerate(celery.AsyncResult(id=tid).get())}
+            game_log = celery.AsyncResult(id=tid).get()
+            return {player['Name']:player for player in game_log}
+
+            # return str(game_log)
         elif state =="FAILED":
             return "Fetch Failed"
 
@@ -66,3 +78,4 @@ def create_app(config_name):
 
 
     return app
+

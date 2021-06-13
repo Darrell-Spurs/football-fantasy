@@ -31,3 +31,7 @@ def stats_default():
 @stats_app.route("/roster")
 def show_roster():
     return render_template("roster.html")
+
+@stats_app.route("/transactions")
+def transactions_list():
+    return render_template("transactions.html")

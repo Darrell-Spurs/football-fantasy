@@ -1,0 +1,10 @@
+celery run command but doesn't work for firebase:
+celery -A celtest worker --loglevel=INFO -P eventlet
+
+celery beat trigger command-
+celery -A celtest beat --loglevel=INFO
+
+celery worker command for firebase and beat:
+celery -A celtest worker --loglevel=INFO -P solo -E
+
+

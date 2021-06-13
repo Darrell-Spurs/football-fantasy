@@ -5,10 +5,9 @@
 {%  endblock %}
 {% block body %}
 <form class="add-form" type="post" autocomplete="off">
+    <!-- <label for="username">Username: &nbsp;</label><input type="text" id="username"><br> -->
     <label for="name">Name: &nbsp;</label><input type="text" id="name"><br>
-    <label for="pos">Position: &nbsp;</label><input type="text" id="pos"><br>
-    <label for="nation">Nation: &nbsp;</label><input type="text" id="nation"><br>
-    <label for="team">Team: &nbsp;</label><input type="text" id="team"><br>
+    <label for="league">League: &nbsp;</label><input type="text" id="league"><br>
     <input type="submit" value="Submit">
 </form>
 <table class="roster-table">
@@ -35,6 +34,5 @@
 {% endblock %}
 {% block scripts %}
     <script src="/static/js/roster.js"></script>
-    <script src="/static/js/roster-db.js"></script>
 {% endblock %}
 

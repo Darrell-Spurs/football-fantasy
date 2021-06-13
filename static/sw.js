@@ -1,5 +1,5 @@
-const CACHE_NAME = 'static-cache-0.1.1'
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-0.1.1'
+const CACHE_NAME = 'static-cache-0.1.13'
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-0.1.13'
 const FILES_TO_CACHE=[
     //routes
     "/",
@@ -19,10 +19,13 @@ const FILES_TO_CACHE=[
     //js
     "/static/js/main.js",
     "/static/js/roster.js",
-    "/static/js/roster-db.js",
+    "/static/js/transaction.js",
+    "/static/js/user.js",
     //templates and stylesheets
     "/static/templates/module.html",
     "/static/stylesheets/module.css",
+    "/static/templates/login.html",
+    "/static/templates/signup.html",
     "/static/stats/templates/roster.html",
     "/static/stats/stylesheets/roster.css",
     //links

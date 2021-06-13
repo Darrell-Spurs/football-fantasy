@@ -4,7 +4,7 @@ class BaseConfig:
     SEND_FILE_MAX_AGE_DEFAULT = 0
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=30)
     SECRET_KEY = os.urandom(12)
-    PORT = 5000
+    PORT = 5001
     TASK_ROUTES = ([
         ('celtest.add', {'queue': 'celery'}),
         ('celtest.mul', {'queue': 'celery2'}),

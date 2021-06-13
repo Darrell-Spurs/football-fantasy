@@ -1,2 +1,3 @@
 web: python main.py
-worker: celery worker --app=celtest --loglevel=INFO -E
+beat: celery -A celtest beat --loglevel=INFO -E
+worker: celery -A celtest worker --loglevel=INFO -P solo -E
