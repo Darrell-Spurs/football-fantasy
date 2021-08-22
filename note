@@ -7,4 +7,23 @@ celery -A celtest beat --loglevel=INFO
 celery worker command for firebase and beat:
 celery -A celtest worker --loglevel=INFO -P solo -E
 
-
+Update db stats from API
+1. Get each league's ids
+-UCL,UEL,EPL,LLG,BUN,SE1,L1/WC,Euro,CoAM; manually one time
+(Completed)
+-Take EPL for example
+1.1 Get All teams, then get all players from each team and put them into DB
+-Operate before the season
+-Mark their status before each game
+-Put them in the transaction player pool
+2. Get Fixture for today
+-find out the time of game(alter time zone)
+-UK time 0:00, once a day
+-if a player had a game, add info, else, add "No Game"
+3. Lineup Fetch 30 min before game starts
+-Change player Status, once per game
+4. Fetch player stats by fixture after the game starts
+-30,60,90,120,150(if game isnt ended), max 5 times per game
+5. Finalize Stats
+-180 min after the game, once per game
+(6. Future 3 fixtures, update daily)

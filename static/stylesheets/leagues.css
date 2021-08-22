@@ -1,0 +1,56 @@
+.icon{
+    height: 3vh;
+    padding-right: 1.5vw;
+    padding-top: 1vh;
+}
+h3{
+    color: green;
+}
+
+.home-table{
+    border-collapse: collapse;
+    text-align: center;
+}
+.home-table>thead td {
+    font-style: italic;
+    line-height: 3vh;
+    font-size: 2vh;
+    border-bottom: 1px black solid;
+}
+
+.home-table>tbody td{
+    line-height: 3vh;
+    font-size: 2vh;
+    height: 6vh;
+    border-bottom: 1px black solid;
+}
+
+#cl{
+    line-height: 3vh;
+    font-size: 2.8vh;
+}
+#cl>label{
+    color:green
+}
+a:-webkit-any-link {
+    color:green
+}
+.current{
+    background-color: rgb(203, 243, 218);
+}
+
+.home-table td{
+    padding: 1vw 3vw 1vw 3vw;
+}
+.home-table td:nth-child(1){
+    width: 20vw;
+}
+.home-table td:nth-child(2){
+    width: 25vw;
+}
+.home-table td:nth-child(3){
+    width: 5vw;
+}
+.home-table td:nth-child(4){
+    width: 13vw;
+}

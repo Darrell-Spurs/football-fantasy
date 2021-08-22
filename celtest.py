@@ -20,9 +20,8 @@ from modules import Toolbox
 # firebase db initialize
 import firebase_admin
 from firebase_admin import credentials, firestore
+firebase_admin.get_app()
 
-cred = credentials.Certificate(web_app.config['FCBOGNDFKIYG'])
-firebase_admin.initialize_app(cred)
 print("Fire")
 # celery definition and initialize
 def make_celery(app):
@@ -54,13 +53,13 @@ def make_celery(app):
 celery = make_celery(web_app)
 
 # celery beat settings
-@celery.on_after_configure.connect()
-def routine_setting(sender, **kwargs):
-    sender.add_periodic_task(
-        crontab(minute='*/10',hour='0,1,2,3,4,5,21,22,23'),
-        live_fetch.s(),
-        name="Live Fetch"
-    )
+# @celery.on_after_configure.connect()
+# def routine_setting(sender, **kwargs):
+#     sender.add_periodic_task(
+#         crontab(minute='*/10',hour='0,1,2,3,4,5,21,22,23'),
+#         live_fetch.s(),
+#         name="Live Fetch"
+#     )
     # sender.add_periodic_task(
     #     crontab(minute=0,hour='0,12'),
     #     playerstats_fetch.s("WC QUAL. (CONMEBOL) 2021"),
@@ -148,6 +147,7 @@ def add(a=1, b=2):
 #     driver.close()
 #     return ulrs
 
+
 @celery.task()
 def playerstats_fetch(tar_league):
     options = webdriver.ChromeOptions()
@@ -193,7 +193,7 @@ def playerstats_fetch(tar_league):
         for row in rows:
             try:
                 tds = row.find_elements_by_tag_name("td")
-                if tds[0].text=='':
+                if tds[0].text == '':
                     continue
                 wanted = {
                         "Name":tds[0].text,
@@ -259,102 +259,101 @@ def playerstats_fetch(tar_league):
 
     return game_log
 
+# @celery.task()
+# def live_fetch():
+#     options = webdriver.ChromeOptions()
+#     SELENIUM = celery.conf['SELENIUM']
+#
+#     # Check current status to decide how to execute Chrome Driver
+#     if SELENIUM == "LOCAL_FILE":  # Development stage
+#         options.add_argument('--headless')
+#         driver = webdriver.Chrome(executable_path=r"C:\Users\darre\cd.exe",
+#                                   options=options)
+#
+#     elif SELENIUM == "BINARY":  # Testing/Formal stage
+#         print("BINARY")
+#         options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+#         options.add_argument('--headless')
+#         options.add_argument('--disable-dev-shm-usage')
+#         options.add_argument('--no-sandbox')
+#         driver = webdriver.Chrome(executable_path=os.environ.get("CHROME_DRIVER_PATH"),
+#                                   options=options)
+#
+#     else:
+#         raise ("SELENIUM configuration error")
+#
+#     driver.get('https://www.playmakerstats.com/zzlivescore.php')
+#     driver.implicitly_wait(30)
+#     time.sleep(1)
+#
+#     toolbox = Toolbox()
+#     links_dict = {}
+#     boxes = driver.find_elements_by_css_selector('div[id="page_main"]>div[class="box"]')[1:]
+#     to_collect = ["European Championship"]
+#     for box in boxes:
+#         comp_name = box.find_element_by_class_name("smallheader").text
+#         if comp_name[2:] not in to_collect:
+#             continue
+#         links_dict[comp_name[2:]]=[]
+#         matchup = box.find_elements_by_css_selector("table>tbody>tr>td[class*='text']")
+#         links = box.find_elements_by_css_selector("table>tbody>tr>td[class*='result']>a")
+#         for link in links:
+#             print(link.text)
+#             link = link.get_attribute("href").replace("match_live","match_performance").replace("jogo","match_performance")
+#             links_dict[comp_name[2:]].append(link)
+#     print(links_dict)
+#
+#     game_log = []
+#     for league, link_list in links_dict.items():
+#         print(league,link_list)
+#         for link in link_list:
+#             driver.get(link)
+#             rows = driver.find_elements_by_css_selector("tbody>tr[role='row']")
+#             for row in rows:
+#                 try:
+#                     tds = row.find_elements_by_tag_name("td")
+#                     if tds[0].text=='':
+#                         continue
+#                     wanted = toolbox.parsing_stats(tds, False)
+#                     game_log.append(wanted)
+#                 except Exception as e:
+#                     print(e)
+#                     continue
+#             time.sleep(1)
+#             print(game_log)
+#         driver.close()
+#
+#         db = firestore.client()
+#
+#         def update_firebase(d,date,name,league):
+#             try:
+#                 existed = db.collection(league).document(name).get({date}).to_dict()
+#                 if existed!=d:
+#                     raise("Update again")
+#                 return
+#             except:
+#                 try:
+#                     db.collection(league).document(name).update({date: d})
+#                 except:
+#                     db.collection(league).document(name).set({date: d})
+#                 try:
+#                     doc = db.collection(league).document(name).get().to_dict()
+#                     for cat in d.keys():
+#                         single_cat = sum([j[cat] if i != "total" else 0 for i, j in doc.items()])
+#                         db.collection(league).document(name).update({f"Total.{cat}": single_cat})
+#                 except:
+#                     db.collection(league).document(name).update({"Total":d})
+#
+#         for player in game_log:
+#             update_firebase(player,toolbox.yesterday(),player["Name"],league)
+#             # db.collection("roster").document(player["Name"]).set(player)
+#             print(player["Name"])
+#             print(player)
+#
+#     return game_log
+
 @celery.task()
 def live_fetch():
-    options = webdriver.ChromeOptions()
-    SELENIUM = celery.conf['SELENIUM']
+    return "0"
 
-    # Check current status to decide how to execute Chrome Driver
-    if SELENIUM == "LOCAL_FILE":  # Development stage
-        options.add_argument('--headless')
-        driver = webdriver.Chrome(executable_path=r"C:\Users\darre\cd.exe",
-                                  options=options)
-
-    elif SELENIUM == "BINARY":  # Testing/Formal stage
-        print("BINARY")
-        options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-        options.add_argument('--headless')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(executable_path=os.environ.get("CHROME_DRIVER_PATH"),
-                                  options=options)
-
-    else:
-        raise ("SELENIUM configuration error")
-
-    driver.get('https://www.playmakerstats.com/zzlivescore.php')
-    driver.implicitly_wait(30)
-    time.sleep(1)
-
-    toolbox = Toolbox()
-    links_dict = {}
-    boxes = driver.find_elements_by_css_selector('div[id="page_main"]>div[class="box"]')[1:]
-    to_collect = ["European Championship"]
-    for box in boxes:
-        comp_name = box.find_element_by_class_name("smallheader").text
-        if comp_name[2:] not in to_collect:
-            continue
-        links_dict[comp_name[2:]]=[]
-        matchup = box.find_elements_by_css_selector("table>tbody>tr>td[class*='text']")
-        links = box.find_elements_by_css_selector("table>tbody>tr>td[class*='result']>a")
-        for link in links:
-            print(link.text)
-            link = link.get_attribute("href").replace("match_live","match_performance").replace("jogo","match_performance")
-            links_dict[comp_name[2:]].append(link)
-    print(links_dict)
-
-    game_log = []
-    for league, link_list in links_dict.items():
-        print(league,link_list)
-        for link in link_list:
-            driver.get(link)
-            rows = driver.find_elements_by_css_selector("tbody>tr[role='row']")
-            for row in rows:
-                try:
-                    tds = row.find_elements_by_tag_name("td")
-                    if tds[0].text=='':
-                        continue
-                    wanted = toolbox.parsing_stats(tds, False)
-                    game_log.append(wanted)
-                except Exception as e:
-                    print(e)
-                    continue
-            time.sleep(1)
-            print(game_log)
-        driver.close()
-
-        db = firestore.client()
-
-        def update_firebase(d,date,name,league):
-            try:
-                existed = db.collection(league).document(name).get({date}).to_dict()
-                if existed!=d:
-                    raise("Update again")
-                return
-            except:
-                try:
-                    db.collection(league).document(name).update({date: d})
-                except:
-                    db.collection(league).document(name).set({date: d})
-                try:
-                    doc = db.collection(league).document(name).get().to_dict()
-                    for cat in d.keys():
-                        single_cat = sum([j[cat] if i != "total" else 0 for i, j in doc.items()])
-                        db.collection(league).document(name).update({f"Total.{cat}": single_cat})
-                except:
-                    db.collection(league).document(name).update({"Total":d})
-
-        for player in game_log:
-            update_firebase(player,toolbox.yesterday(),player["Name"],league)
-            # db.collection("roster").document(player["Name"]).set(player)
-            print(player["Name"])
-            print(player)
-
-    return game_log
-
-@celery.task()
-def test():
-    pass
-
-# live_fetch()
 

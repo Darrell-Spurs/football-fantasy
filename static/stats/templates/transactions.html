@@ -1,0 +1,25 @@
+{% extends "module.html" %}
+
+{% block links %}
+    <link rel="stylesheet" href="/static/stats/stylesheets/transactions.css">
+{%  endblock %}s
+{% block body %}
+<table class="transaction-table">
+    <thead>
+        <tr class="stats-head">
+            <td>G</td>
+            <td>A</td>
+            <td>P</td>
+            <td>S</td>
+            <td>T</td>
+        </tr>
+    </thead>
+    <tbody class="transaction">
+    </tbody>
+</table>
+
+{% endblock %}
+{% block scripts %}
+    <script src="/static/js/transactions.js"></script>
+{% endblock %}
+

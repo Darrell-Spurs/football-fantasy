@@ -27,11 +27,12 @@ def stats_default():
     return doc.to_dict()
 
 
-
 @stats_app.route("/roster")
 def show_roster():
     return render_template("roster.html")
+    # return render_template("maintenance.html")
 
 @stats_app.route("/transactions")
 def transactions_list():
-    return render_template("transactions.html")
+    return render_template("tran.html")
+    # return "Transaction"

@@ -2,31 +2,18 @@
     padding-left: 0;
     padding-right: 0;
 }
-.roster-table, .today-total{
+.roster-table{
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 15vh;
+    margin-bottom: 30vh;
     table-layout: fixed;
-}
-.today-total{
-    margin-bottom: 3vh;
-    text-align: center;
 }
 .roster-table .stat-cats{
     text-align: center;
     border-top: solid 0.16vh rgb(187, 187, 187);
     border-bottom: solid 0.16vh rgb(187, 187, 187)
 }
-
-.today-total .today-cats{
-    text-align: center;
-    border-top: solid 0.16vh rgb(187, 187, 187)
-}
-
-.today-stats{
-    border-bottom: solid 0.16vh rgb(187, 187, 187)
-}
-.roster-table td, .today-total td{
+.roster-table td{
     font-size: 16px;
 }
 
@@ -46,7 +33,7 @@
     height: 5vh;
 }
 
-.player_pos{
+.add_button{
     text-align: center;
 }
 .add_button>img{
@@ -55,7 +42,7 @@
 }
 
 
-thead{
+.roster-table thead{
     font-weight: normal;
 }
 

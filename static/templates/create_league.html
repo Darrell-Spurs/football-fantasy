@@ -1,0 +1,88 @@
+{% extends "module.html" %}
+
+{% block style_list %}
+<link rel="stylesheet" href="/static/stylesheets/form.css">
+<link rel="stylesheet" href="/static/stylesheets/create_league.css">
+{% endblock %}
+
+{% block title %}
+<title>Create League</title>
+{% endblock %}
+
+{% block body%}
+<span id="hidd" hidden>{{user}}</span>
+{% if auth_user.login == True %}
+    <h2 class="page-title">Create League</h2>
+    <form method="POST" autocomplete="off" id="create-league">
+        {{form.hidden_tag()}}
+        <h3 class="page-title">Basic Settings</h3>
+        <div id="basic">
+            <div class="form-group">
+                {{form.league_name.label}}
+                {{form.league_name(class="form-control", placeholder="League Name")}}
+            </div>
+            <div class="form-group">
+                {{form.score_type.label}}
+                {{form.score_type(class="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.members.label}}
+                {{form.members(class="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.invite.label}}
+                {{form.invite(class="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.draft.label}}
+                {{form.draft(class="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.date.label}}
+                {{form.date(class="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.time.label}}
+                {{form.time(class="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.add_scoring(class="form-control")}}
+            </div>
+        </div>
+
+        <!-- scoring -->
+        <div id="scoring" class="hide">
+        <h3 class="page-title">Scoring Settings</h3>
+            <div class="form-group">
+                {{form.rosters.label}}
+                {{form.rosters(class="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.add_rostering(class="form-control")}}
+            </div>
+        </div>
+
+        <!-- roster -->
+        <div id="roster" class="hide">
+            <h3 class="page-title">Roster Settings</h3>
+            <div class="form-group">
+                {{form.positions.label}}
+                {{form.positions(class="form-control ros")}}
+            </div>
+
+
+                <div class="form-group" id="last">
+                    {{form.submit(class="form-control next")}}
+                </div>
+            </div>
+        
+    </form>
+{% else %}
+    <h2 class="page-title">Please Login First</h2>
+{% endif %}
+{% endblock %}
+
+
+{% block scripts%}
+<script src="/static/js/create_league.js"></script>
+{% endblock %}

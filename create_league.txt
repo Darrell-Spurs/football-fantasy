@@ -1,0 +1,19 @@
+Create Leauge
+
+0.Basic Settings
+0)League Name
+1)Scoring Type
+2)Draft Type
+3)Draft Time,date(If it isn't offline draft)
+4)Invite Permission
+5)Max Member Counts
+
+1.Scoring
+0)Choose Cats
+1)Points for each Cat(INFO)
+
+2.Roster Size
+0)Choose Positions and counts
+
+3.Invite Members
+0)Link(?)

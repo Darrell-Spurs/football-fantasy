@@ -1,0 +1,22 @@
+#create-league{
+    margin-bottom: 30vh;
+}
+
+.hide{
+    display: none;
+}
+
+ul{
+    list-style-type: none;
+    padding-left: 1vw;
+}
+
+
+#roster li label{
+    display: inline-block;
+    width: 12vh;
+    text-align: right;
+}
+#roster li input{
+    width: 2vh
+}

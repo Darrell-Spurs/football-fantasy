@@ -1,7 +1,7 @@
 {% extends "module.html" %}
 
 {% block links %}
-    <link rel="stylesheet" href="/static/stats/stylesheets/roster.css">
+    <link rel="stylesheet" href="/static/stats/stylesheets/tran.css">
 {%  endblock %}
 
 {%block universal%}
@@ -20,16 +20,7 @@
 </form> -->
 <span id="user" hidden>{{auth_user.info}}</span>
 
-<table class="today-total">
-    <thead>
-        <tr class="today-cats">
-        </tr>
-    </thead>
-    <tbody>
-        <tr class="today-stats"></tr>
-    </tbody>
-</table>
-<table class="roster-table">
+<table class="roster-table" id="roster-table">
     <!-- <button id="fetch">FETCH</button> -->
     <thead>
         <tr class="stat-cats">
@@ -43,6 +34,6 @@
 
 {% endblock %}
 {% block scripts %}
-    <script src="/static/js/roster.js"></script>
+    <script src="/static/js/tran.js"></script>
 {% endblock %}
 

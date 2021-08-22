@@ -1,11 +1,11 @@
-const CACHE_NAME = 'static-cache-0.1.13'
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-0.1.13'
+const CACHE_NAME = 'static-cache-0.1.37'
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-0.1.37'
 const FILES_TO_CACHE=[
     //routes
     "/",
     "/offline",
-    //icons
-    "/static/favicon.ico",
+    // //icons
+    // "/static/favicon.ico",
     "/static/manifest.json",
     "/static/images/icon_92.png",
     "/static/images/icon_96.png",
@@ -16,20 +16,18 @@ const FILES_TO_CACHE=[
     "/static/images/icon_192.png",
     "/static/images/icon_512.png",
     "/static/images/background.jpg",
-    //js
+    "/static/fontawesome/plus-circle-solid.png",
+    // //js
     "/static/js/main.js",
     "/static/js/roster.js",
-    "/static/js/transaction.js",
+    "/static/js/transactions.js",
     "/static/js/user.js",
-    //templates and stylesheets
+    // //templates and stylesheets
     "/static/templates/module.html",
     "/static/stylesheets/module.css",
-    "/static/templates/login.html",
     "/static/templates/signup.html",
     "/static/stats/templates/roster.html",
-    "/static/stats/stylesheets/roster.css",
-    //links
-    "https://code.jquery.com/jquery-3.6.0.js"
+    "/static/stats/stylesheets/roster.css"
 ]
 
 //cache size limit function
@@ -71,26 +69,54 @@ self.addEventListener("activate",(evt)=>{
         }));
     self.clients.claim()
 });
+
+// // Fetch event
+// self.addEventListener('fetch', (event) =>{
+//     console.log("[From Service Worker]", event)
+//     //Make sure not to cache the response that's from firestore api 
+//     if(event.request.url.indexOf('firestore.googleapis.com')===-1){
+//         event.respondWith(
+//             caches.match(event.request).then(cacheRes=>{
+//                 return cacheRes || fetch(event.request).then(
+//                     fetchRes=>{
+//                         caches.open(DYNAMIC_CACHE_NAME).then(cache=>{
+//                             cache.put(event.request.url, fetchRes.clone())
+//                             limitCacheSize(DYNAMIC_CACHE_NAME,100)
+//                             return fetchRes
+//                         })
+//                     }
+//                 )
+//             }).catch(()=>{
+//                 if(event.request.url.indexOf(".html")>-1){
+//                     return caches.match("/offline")}
+//                 }
+//             ))
+//         }
+//     })
+
+function nonexistance(string,target){
+    var good = 1;
+    target.forEach(element => {
+        if(string.indexOf(element)!==-1){
+            good = 0;
+        }
+    });
+    return good;
+}
+
 // Fetch event
 self.addEventListener('fetch', (event) =>{
     console.log("[From Service Worker]", event)
-    //Make sure not to cache the response is from firestore api 
-    if(event.request.url.indexOf('firestore.googleapis.com')===-1){
-        event.respondWith(
-            caches.match(event.request).then(cacheRes=>{
-                return cacheRes || fetch(event.request).then(
-                    fetchRes=>{
-                        caches.open(DYNAMIC_CACHE_NAME).then(cache=>{
-                            cache.put(event.request.url, fetchRes.clone())
-                            limitCacheSize(DYNAMIC_CACHE_NAME,3)
-                            return fetchRes
-                        })
+    //Make sure not to cache the response that's from firestore api 
+    event.respondWith(
+        caches.open(DYNAMIC_CACHE_NAME).then(function(cache){
+            return fetch(event.request).then(function(response){
+                if(nonexistance(event.request.url,["asdbfbb"])){
+                    if(!(event.request.method=="POST")){
+                        cache.put(event.request,response.clone())
                     }
-                )
-            }).catch(()=>{
-                if(event.request.url.indexOf(".html")>-1){
-                    return caches.match("/offline")}
                 }
-            ))
-        }
-    })
+                return response
+            })
+        })
+    )})

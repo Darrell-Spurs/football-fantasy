@@ -1,0 +1,59 @@
+{% extends "module.html" %}
+
+{% block title %}
+<title>Leagues</title>
+{% endblock%}
+
+{% block style_list %}
+<link rel="stylesheet" href="/static/stylesheets/leagues.css">
+{% endblock %}
+
+{% block body %}
+<div id="my-leagues">
+    <h3>My Leagues</h3>
+<table class="home-table">
+    <span id="h-email" hidden>{{user.email}}</span>
+    <thead>
+        <tr class="league-row">
+            <td>League</td>
+            <td>Team Name</td>
+            <td>Scoring</td>
+            <td>Record</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for l in user.leagues %}
+            {% if l == user.current_league %}
+            <tr class="current league-row">
+                <td>{{l}}</td>
+                <td>{{my_league.user[l]["name"]}}</td>
+                <td>{{my_league.info[l]["score_type"]}}</td>
+                <td>123-12-12</td>
+            </tr>
+            {% else %}
+            <tr class="league-row">
+                <td class="ln">{{l}}</td>
+                <td>{{my_league.user[l]["name"]}}</td>
+                <td>{{my_league.info[l]["score_type"]}}</td>
+                <td>0-0-0</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<div>
+<a id="cl" href="/create_league"><img class="icon" src="/static/fontawesome/plus-circle-solid.svg">Create Legaue</a>
+</div>
+<div id="cl">
+    <form id="join-lg" autocomplete="off" id="create-league">
+    <label for="lg-name"><img class="icon" src="/static/fontawesome/hand-point-right-solid.svg">Join Legaue</label>
+    <input name="lg-name" id="lg-name" type="text">
+    <input type="submit" value="Search">
+    </form> 
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/leagues.js"></script>
+{% endblock %}

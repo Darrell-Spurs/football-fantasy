@@ -7,7 +7,6 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 web_app = create_app("development")
-csrf = CSRFProtect(web_app)
 # development
 # testing
 

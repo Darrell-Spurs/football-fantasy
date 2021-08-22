@@ -1,0 +1,40 @@
+{% extends "module.html" %}
+{% block style_list %}
+<link rel="stylesheet" href="/static/stylesheets/form.css">
+{% endblock %}
+{% block body%}
+<h2 class="page-title">SIGNUP</h2>
+<form method="POST" autocomplete="on" id="signup-form">
+    {{form.hidden_tag()}}
+    <div class="form-group">
+        {{form.email.label}}
+        {{form.email(class="form-control", placeholder="email")}}
+    </div>
+    <div class="form-group">
+        {{form.username.label}}
+        {{form.username(class="form-control", placeholder="username")}}
+    </div>
+    <div class="form-group">
+        {{form.password.label}}
+        {{form.password(class="form-control", placeholder="password")}}
+    </div>
+    <div class="form-group">
+        {{form.fav_nation.label}}
+        {{form.fav_nation(class="form-control", placeholder="favorite nation")}}
+    </div>
+    <div class="form-group">
+        {{form.fav_club.label}}
+        {{form.fav_club(class="form-control", placeholder="favorite club")}}
+    </div>
+    <div class="form-group">
+        <p>Already have an account? <a href="/login">Login Here</a>!</p>
+    </div>
+    <div class="form-group">
+        {{form.submit(class="form-control")}}
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/user.js"></script>
+{% endblock %}

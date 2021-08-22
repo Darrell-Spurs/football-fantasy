@@ -1,0 +1,11 @@
+{% extends "module.html" %}
+{% block title %}
+<title>Profile</title>
+{% endblock %}
+
+{% block body %}
+<button>Personal Data</button>
+<button>Teams</button>
+{{auth_user.info}}
+
+{% endblock %}

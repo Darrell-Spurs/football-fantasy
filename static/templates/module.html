@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable='no'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta name="description" content="football_fantasy_app">
     <meta name="theme-color" content="#ECF6FF">
     
@@ -20,6 +20,7 @@
     {% endblock %}
 
     {% block register %}
+    <!-- <script type="text/javascript" src="/static/js/main.js"></script> -->
     {% endblock %}
     <!---Main.js-->
 
@@ -38,6 +39,10 @@
     <meta name="application-name" content="Football Fantasy">
     <meta name="format-detection"  content="telephone=no">
 
+    <!-- JQuery, Bootstrap, Socket -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="crossorigin="anonymous"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
     <!-- CSS stylesheets -->
     <link rel="stylesheet" href="/static/stylesheets/module.css" type="text/css">
@@ -45,46 +50,84 @@
     <!-- Extra Links -->
     {% block links %}
     {% endblock %}
-
-    
-    <nav class="upper-nav">
-        <div class="nav-list">        
-            <span class="nav-item"><a href="/">HOME</a></span>
-            <span class="nav-item">NEWS</span>
-            {% if not auth_user.login %}
-            <span class="nav-item" id="login"><a href="/signup">SIGN UP</a></span>
-            <span class="nav-item" id="login"><a href="/login">LOG IN</a></span>
-            {% endif %}
-            {% if auth_user.login %}
-            <span class="nav-item">Username</span>
-            <span class="nav-item">Profile</span>
-            {% endif %}
-
-        </div>
-
-    </nav>
-    <img class="top-bg-img" src="/static/images/background.jpg" alt="background">
-    <nav class="lower-nav">
-        <div class="nav-list">
-            <span class="nav-item"><a href="/stats/roster">ROSTER</a></span>
-            <span class="nav-item">MATCHUP</span>
-            <span class="nav-item"><a href="/stats/transactions">TRANSACTION</a></span>
-            <span class="nav-item">STANDINGS</span>
-            </span>
-        </div>
-    </nav>
 </head>
 
-<body id="meta-container">
+<body>
+    <span class="alert alert-hide">
+        <div class="alert-title">Confirm</div>
+        <hr>
+        <div class="alert-content"></div>
+        <div class="alert-ok"></div>
+    </span>
+    {%block universal %}
+    {%endblock%}
+    <nav class="upper-nav">
+        <div class="nav-list">  
+            <span class="nav-item" id="menu"><a>
+                <img src="/static/fontawesome/bars-solid.svg">
+                <p class="tag">Menu</p>
+            </a></span>      
+            {% if not auth_user.login %}
+            <span class="nav-item"><a href="/login">
+                <img src="/static/fontawesome/sign-in-alt-solid.svg">
+                <p class="tag">Log In</p>
+            </a></span>
+            <span class="nav-item"><a href="/signup">
+                <img src="/static/fontawesome/user-plus-solid.svg">
+                <p class="tag">Sign Up</p>
+            </a></span>
+            {% endif %}
+            {% if auth_user.login %}
+            <span class="nav-item"><a href="/logout">
+                <img src="/static/fontawesome/sign-out-alt-solid.svg">
+                <p class="tag">Sign Out</p>
+            </a></span>
+            <span class="nav-item"><a href="/profile">
+                <img src="/static/fontawesome/user-solid.svg">
+                <p class="tag">{{auth_user.info.username}}</p>
+            </a></span>
+            {% endif %}
+            <span class="nav-item"><a href="/">
+                <img src="/static/fontawesome/home-solid.svg">
+                <p class="tag">Home</p>
+            </a></span>
+        </div>
+<!--<i class="fas fa-home"></i> <i class="fas fa-newspaper"></i> <i class="fas fa-user-plus"></i><i class="fas fa-sign-out-alt"></i>
+<i class="fas fa-user"></i> -->
+    </nav>
+    <!-- <img class="top-bg-img" src="/static/images/background.jpg" alt="background"> -->
+    <nav class="lower-nav">
+        <div class="nav-list">
+            <span class="nav-item"><a href="/stats/roster">
+                <img src="/static/fontawesome/users-solid.svg">
+                <p class="tag">Roster</p>
+            </a></span>
+            <span class="nav-item"><a href="/stats/matchup">
+                <img src="/static/fontawesome/futbol-regular.svg">
+                <p class="tag">Matchup</p>
+            </a></span>
+            <span class="nav-item"><a href="/stats/transactions">
+                <img src="/static/fontawesome/exchange-alt-solid.svg">
+                <p class="tag">Transaction</p>
+            </a></span>
+            <span class="nav-item"><a href="/stats/standings">
+                <img src="/static/fontawesome/list-ol-solid.svg">
+                <p class="tag">Standings</p>
+            </a></span>
+        </div>
+    </nav>
+    <div class="sidebar hide">
+        <a class="header"><span><img id="hide-menu" src="/static/fontawesome/bars-solid.svg"></span></a>
+        <a href="/"><img src="/static/fontawesome/home-solid.svg"><span>Home</span></a>
+        <a href="/leagues"><img src="/static/fontawesome/globe-europe-solid.svg"><span>Leagues</span></a>
+        <a href="/news"><img src="/static/fontawesome/newspaper-regular.svg"><span>News</span></a>
+        <a href="/profile"><img src="/static/fontawesome/user-solid.svg"><span>Profile</span></a>
+    </div>
+    <div id="meta-container">
 
-    {% block body %}
-    {% endblock %}
-
-    <!-- JQuery, Bootstrap, Socket -->
-    <script src="https://code.jquery.com/jquery-3.6.0.js"integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+        {% block body %}
+        {% endblock %}
+    </div>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script> -->
 
 
@@ -93,7 +136,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
-
+    <!-- <script src="https://kit.fontawesome.com/02439ec478.js" crossorigin="anonymous"></script> -->
 
     <script>
     // Your web app's Firebase configuration
