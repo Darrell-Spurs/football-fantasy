@@ -1,0 +1,44 @@
+html, body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden
+}
+
+.box{
+    display: flex;
+    animation-name: colorchange;
+    animation-duration: 5s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+}
+.bingo{
+    display: flex;
+    font-size: 50vh;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+    width: 78%;
+}
+
+@keyframes colorchange {
+    0% {background-color: rgb(253, 245, 245); color:red}
+    25% {background-color: rgb(255, 245, 228); color:orange}
+    50% {background-color: rgb(226, 255, 225);color:green}
+    75% {background-color: rgb(218, 229, 253);color:blue}
+    100% {background-color: rgb(246, 233, 255);color:purple}
+}
+
+.drawn{
+    color: rgb(65, 6, 6);
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 7vh;
+    display: flex;
+    font-size: 5vh;
+    justify-content:left;
+    align-items:flex-start;
+    text-align:left;
+    width: 22%;
+    margin-top: 1vh;
+}

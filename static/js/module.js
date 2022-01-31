@@ -11,3 +11,11 @@ $("#menu").on("click",function(){
 //     $(".alert").addClass("alert-hide")
 //     $(".alert-content").empty()
 // })
+
+// var wooah = {}
+// db.collection("Premier League 2021").get().then(res=>{
+//     res.forEach(doc=>{
+//         wooah[doc.id.toString()]=doc.data()
+//     })
+//     console.log(wooah)
+// })

@@ -6,7 +6,7 @@ import requests, json, os
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-web_app = create_app("testing")
+web_app = create_app("development")
 # development
 # testing
 
@@ -17,5 +17,5 @@ if __name__ == '__main__':
     # db = firestore.client()
     # web_app.config["DB"] = db
     port = int(os.environ.get("PORT",5555))
-    web_app.run(debug=True, port=port, host=web_app.config["HOST"])
+    web_app.run(debug=False, port=port, host=web_app.config["HOST"])
 

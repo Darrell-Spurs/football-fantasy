@@ -1,0 +1,28 @@
+{% extends "module.html" %}
+
+{% block title %}
+<title>News</title>
+{% endblock %}
+
+{% block style_list %}
+<link rel="stylesheet" href="/static/stylesheets/news.css">
+{% endblock %}
+
+{% block body %}
+<h2>Player Update {{today}}</h2>
+
+{% if inj=={} %}
+<div class="log">
+    No Updates
+</div>
+{% endif %}
+
+{% for i in inj %}
+<div class="log">
+    <img class="player_team" src="{{ inj[i]['team']['logo'] }}">
+    <b>{{inj[i]['player']['name']}}</b><br>   
+    {{inj[i]['player']['type']}}<i> ({{inj[i]['player']['reason']}})</i>
+</div>
+{% endfor %}
+
+{% endblock %}

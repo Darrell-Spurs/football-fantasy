@@ -107,34 +107,41 @@
     padding: 5%;
 }
 .pop-name{
-    font-size: 3.2vh;
+    font-size: 2.8vh;
 }
 .pop-info{
-    margin-top: 1.2vh;
+    margin-top: 0.8vh;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    font-size: 2.2vh;
+    font-size: 1.75vh;
     color: gray;
 }
-.player_photo2{
-    height: 7.2vh;
+.player_photo2 {
+    height: 6.8vh;
+    margin-right: 2.4vw;
 }
 hr{
     width: 100%;
     background-color: black;
     height: 0.12vh;
     border: none;
-    margin-top: 1vh;
+    margin-top: 0.7vh;
+    margin-bottom: 0.2vh;
 }
+#bottom-hr{
+    margin-bottom: 1vh;
+}
+
 .pop-hide{
     transform: translateY(200%);
 }
 .pop-stats{
-    height: 75%;
+    height: 44vh;
+    overflow: scroll;
 }
 .pop-end{
-    align-self: center;
+    text-align: center;
 }
 
 .player-ctrl{
@@ -175,4 +182,65 @@ hr{
 #no{
     border: solid 1px red;
     background:rgb(252, 228, 231);
+}
+
+select{
+    text-align: center;
+    font-size: 2vh;
+    border-radius: 1.5vw;
+    border: solid black 0.4vw;
+    margin-left: 2vw;
+    margin-top: 0.6vh;
+    margin-bottom: 1.2vh;
+    width: auto;
+}
+
+select:focus{
+    outline-style: none;
+}
+
+.pop-table {
+    font-size: 2vh;
+    table-layout: fixed;
+    border-collapse: collapse;
+    line-height: 1.4;
+}
+
+.inactive {
+    font-size: 1.4vh;
+    color: white;
+    display: inline-block;
+    background-color: red;
+    border: 0.7vw solid red;
+    border-radius: 2vw;
+    letter-spacing: 0.06em;
+    padding-left: 0.08em;
+    padding-right: 0.06em;
+    opacity: 70%;
+}
+
+.pop-table tr{
+    border-bottom: solid rgb(189, 189, 189) 0.18vh;
+}
+
+.pop-table td{
+    min-width: 9.5vw;
+    text-align: center;
+}
+
+.pop-matchup{
+    text-align: left !important;
+}
+
+.md{
+    color:rgb(133, 133, 133)
+}
+
+.pop-tab{
+    background-color: #eeeeee;
+    margin-top: 0.8vh;
+    margin-bottom: 0.8vh;
+    padding-top: 0.25vh;
+    padding-bottom: 0.3vh;
+    border: solid black 0vw;
 }

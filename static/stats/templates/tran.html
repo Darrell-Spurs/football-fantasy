@@ -20,6 +20,26 @@
 </form> -->
 <span id="user" hidden>{{auth_user.info}}</span>
 
+<select id="range" name="range">
+    <option value="TodayT">Today</option>
+    <option value="Last3T">Last 3 Matchdays (Total)</option>
+    <option value="Last3A">Last 3 Matchdays (Average)</option>
+    <option value="Last5T">Last 5 Matchdays (Total)</option>
+    <option value="Last5A">Last 5 Matchdays (Average)</option>
+    <option value="Last10T">Last 10 Matchdays (Total)</option>
+    <option value="Last10A">Last 10 Matchdays (Average)</option>
+    <option value="SeasonT">Season (Total)</option>
+    <option value="SeasonA">Season (Average)</option>
+</select>
+
+<select id="f-position" name="f-position">
+    <option value="AL">All Positions</option>
+    <option value="GK">Goalkeepers</option>
+    <option value="DF">Defenders</option>
+    <option value="MD">Midfielders</option>
+    <option value="FW">Forwards</option>
+</select>
+
 <table class="roster-table" id="roster-table">
     <!-- <button id="fetch">FETCH</button> -->
     <thead>

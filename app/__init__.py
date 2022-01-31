@@ -69,7 +69,6 @@ def create_app(config_name):
         return dict(auth_user=auth_user)
 
     @app.route("/")
-    @app.route("/main")
     def home_page():
         return render_template("home.html")
 
@@ -173,7 +172,7 @@ def create_app(config_name):
             to_db["draft_time"]=f'{to_db["date"].__str__()}-{to_db["time"].__str__()}'
             for e in ["csrf_token","submit","date","time","add_rostering","add_scoring"]:
                 to_db.pop(e)
-            db.collection("leagues").document(league_name).set({"INFO":to_db,"owned":[]})
+            db.collection("leagues").document(league_name).set({"INFO":to_db,"owned":[],"matchup":{},"standings":{}})
             # add member to league doc
             username = db.collection("users").document(email).get().to_dict()["username"]
             email_id = Toolbox().email_alphabetify(email)
@@ -189,6 +188,18 @@ def create_app(config_name):
 
         return render_template("create_league.html",form = form)
 
+    @app.route("/news")
+    def news():
+        tb = Toolbox()
+        # date change
+        today = tb.today_y_m_d()
+        inj = db.collection("Injuries").document(today).get().to_dict()
+        print(inj)
+        return render_template("news.html",inj = inj, today = today)
+
+    @app.route("/bingo")
+    def bingo():
+        return render_template("bingo.html")
 
     # REQUIRED FILES
     @app.route('/static/favicon.ico', methods=['GET'])
@@ -203,7 +214,18 @@ def create_app(config_name):
     def offline():
         return render_template("offline.html")
 
-    # from modules import ApiFetch
-    # api = ApiFetch()
-    # api.testflight()
+    from modules import ApiFetch
+    api = ApiFetch()
+    # api.recalculate_recent_stats()
+    # api.fetch_all_player_to_db_2()
+    # api.get_today_fixtures()
+    # api.get_fixture_lineups_to_db()
+    # api.find_all_teams()
+    # api.get_injuries()
+    # api.update_latest_stats()
+    # api.get_today_fixtures_to_db()
+    # api.add_all_team_squads()
+    # api.get_fixture_lineups_to_db()
+    # api.get_fixture_stats_to_db()
     return app
+

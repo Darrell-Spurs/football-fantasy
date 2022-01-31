@@ -10,6 +10,13 @@ import requests
 
 
 class Toolbox:
+    def __init__(self):
+        self.cats = ['tackles', 'minutes', 'shots','passes',
+                     'rating', 'duels_won', 'key_passes',
+                     'goals', 'dribbles', 'fouls_drawn', 'assists',
+                     'fouls', 'blocks', 'red_cards', 'conceded', 'offsides',
+                     'saves', 'yellow_cards', 'dribbles_won',
+                     'duels', 'shot_on_goals', 'interceptions']
     def today_y_m_d(self):
         from time import gmtime as gm
         gm = gm()
@@ -50,6 +57,14 @@ class Toolbox:
         string = string.replace(".","dot").replace("_","uscore").split("@")[0]
         return string
 
+
+    def get_mds_desc(self,player):
+        mds = [md for md in player.keys() if "MD" in md]
+        mds = [int(md[2:]) for md in mds]
+        mds.sort()
+        mds.reverse()
+        mds = ["MD"+str(md) for md in mds]
+        return mds
 
 # customize MultiCheckboxField (from github)
 class MultiCheckboxField(SelectMultipleField):
@@ -122,13 +137,19 @@ class ApiFetch:
                         # "Serie A",
                         # "Bundesliga",
                         # "Champions League"
+        self.league = "Premier League"
         self.id_dict = self.get_league_id()
         firebase_admin.get_app()
         self.db = firestore.client()
         # self.today = Toolbox().today_y_m_d()
-        self.today = Toolbox().today_y_m_d()
+        self.today = "2021-08-14"
+        # self.today = Toolbox().today_y_m_d()
         self.season = "2021"
-        self.full_data = {}
+        self.nseason = "EPL2021-22" # upd: 22.01.24
+        self.curr_md = "Regular Season - 2" # variable
+        self.doc_md = "MD2" # variable
+        self.league_id = self.id_dict[self.league] # upd: 22.01.24
+        self.team_ids = self.get_team_ids() # upd: 22.01.24
 
     def get_league_id(self):
         id_dict = dict()
@@ -139,6 +160,7 @@ class ApiFetch:
             file.close()
         return id_dict
 
+    # abandoned
     def fetch_all_player_to_db(self):
         url = "https://api-football-v1.p.rapidapi.com/v3/players"
         for league in self.leagues:
@@ -184,121 +206,188 @@ class ApiFetch:
 
         print("fetch_to_db_completed")
 
-    # def add_to_ids_list(self, league, team, id):
-    #     # add this list under each team collection for js client to fetch
-    #     # because no function in the js SDK is able to fetch subcollections
-    #     old_list = self.db.collection("roster").document(self.season) \
-    #         .collection(league).document(team) \
-    #         .get()
-    #
-    #     if old_list.to_dict() is None:
-    #         new_list = []
-    #     else:
-    #         new_list = old_list.to_dict()["ids"]
-    #
-    #     new_list.append(id)
-    #
-    #     self.db.collection("roster").document(self.season) \
-    #         .collection(league).document(team) \
-    #         .set({"ids": new_list})
+    # abandoned, revived on 2022-01-26
+    def fetch_all_player_to_db_2(self):
+        url = "https://api-football-v1.p.rapidapi.com/v3/players"
 
-    def get_today_fixtures(self):
-        # this function is ran daily at 0:00 GMT (UTF+0)
-        # fetch all the fixtures today in all available leagues(5 in total)
-        # return a dict with key: league name/ value: fetch data
-        url = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
-        for league in self.leagues:
-            querystring = {"date": self.today,
-                           "league": self.get_league_id()[league],
-                           "season": self.season}
+        querystring = {"league": self.league_id,
+                       "season": self.season}
+        headers = {
+            'x-rapidapi-key': "b56ffa1a8dmshda48f616f1ec5bcp1dc2b2jsn37fbb2fff2ce",
+            'x-rapidapi-host': "api-football-v1.p.rapidapi.com"
+        }
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        page_count = json.loads(response.text)["paging"]["total"]
+
+        for i in range(1,page_count+1):
+            querystring = {"league": self.league_id,
+                           "season": self.season,
+                           "page": str(i)}
             headers = {
                 'x-rapidapi-key': "b56ffa1a8dmshda48f616f1ec5bcp1dc2b2jsn37fbb2fff2ce",
                 'x-rapidapi-host': "api-football-v1.p.rapidapi.com"
             }
-
             response = requests.request("GET", url, headers=headers, params=querystring)
-            fetch_data = json.loads(response.text)
-            self.full_data[league] = fetch_data
+            data_page = json.loads(response.text)
 
-    def fixtures_to_db(self):
-        # this function is ran daily after get_today's_fixture
+            for player in data_page["response"]:
+                to_db = {
+                    "id": player["player"]["id"],
+                    "name": player["player"]["name"],
+                    "full_name": f'{player["player"]["firstname"]} {player["player"]["lastname"]}',
+                    "age": player["player"]["age"],
+                    "injured": player["player"]["injured"],
+                    "nationality": player["player"]["nationality"],
+                    "photo": player["player"]["photo"],
+                    "team": player["statistics"][0]["team"]["name"],
+                    "status": "NA"
+                }
+                self.db.collection(self.nseason).document(str(to_db['id']))\
+                    .set({"INFO":to_db,"Season":{},"Last3":{},"Last5":{},"Last10":{}})
+                print(player["player"]["name"])
+
+        print("fetch_to_db_completed")
+
+    # get all fixtures in a season (once a season)
+    def fetch_all_fixtures(self):
+        url = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
+        querystring = {"league":"39","season":"2021"}
+        headers = {
+            'x-rapidapi-host': "api-football-v1.p.rapidapi.com",
+            'x-rapidapi-key': "b56ffa1a8dmshda48f616f1ec5bcp1dc2b2jsn37fbb2fff2ce"}
+
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        fetch_data = json.loads(response.text)
+
+        for response in fetch_data["response"]:
+            date = response["fixture"]["date"][:10]
+            rd = response["league"]["round"]
+            to_db = {"fixture_id": response["fixture"]["id"],
+                     "match_date": date,
+                     "match_time": Toolbox().process_game_time(response["fixture"]["date"]),
+                     "venue": response["fixture"]["venue"]["name"],
+                     "status": response["fixture"]["status"]["short"],
+                     "season": str(response["league"]["season"]),
+                     "round": rd,
+                     "home_id": response["teams"]["home"]["id"],
+                     "home": response["teams"]["home"]["name"],
+                     "away_id": response["teams"]["away"]["id"],
+                     "away": response["teams"]["away"]["name"],
+                     "goals_h": str(response["goals"]["home"]),
+                     "goals_a": str(response["goals"]["away"])
+                     }
+            doc_id = f"{to_db['season']} - {to_db['home']} vs {to_db['away']}"
+            try:
+                self.db.collection(f"{self.nseason} Fixtures").document(rd)\
+                    .update({doc_id:to_db})
+            except Exception as e:
+                self.db.collection(f"{self.nseason} Fixtures").document(rd) \
+                    .set({"ok":True})
+                self.db.collection(f"{self.nseason} Fixtures").document(rd) \
+                    .update({doc_id:to_db})
+                self.db.collection(f"{self.nseason} Fixtures").document(rd) \
+                    .update({"ok":firestore.DELETE_FIELD})
+
+    # get today's fixtures (once a day) temporarily shut down
+    def get_today_fixtures_to_db(self):
+        # this function is ran daily at 0:00 GMT (UTF+0)
+        # fetch all the fixtures today
+
+        url = "https://api-football-v1.p.rapidapi.com/v3/fixtures"
+        querystring = {"date": self.today,
+                       "league": self.league_id,
+                       "season": self.season}
+        headers = {
+            'x-rapidapi-key': "b56ffa1a8dmshda48f616f1ec5bcp1dc2b2jsn37fbb2fff2ce",
+            'x-rapidapi-host': "api-football-v1.p.rapidapi.com"
+        }
+
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        fetch_data = json.loads(response.text)
+
+        print(fetch_data)
         # used to store and transfer the JSON data from api to app's db
         # the structure of db collection is:
         # fixture(col)>date(doc)>league(col)>fixture_id(doc)>details(file)
-        # on the outer part, iterate through leagues
-        # the following data will be saved in the league collection
+        # the  data will be saved in league collection (Premier League)
         # then iterate through fixtures
         # use f-id as doc name and save under the league collection
-        for league in self.leagues:
-            for response in self.full_data[league]["response"]:
-                to_db = {"fixture_id": response["fixture"]["id"],
-                         "match_date": self.today,
-                         "match_time": Toolbox().process_game_time(response["fixture"]["date"]),
-                         "venue": response["fixture"]["venue"]["name"],
-                         "status": response["fixture"]["status"]["short"],
-                         "season": str(response["league"]["season"]),
-                         "round": response["league"]["round"],
-                         "home_id": response["teams"]["home"]["id"],
-                         "home": response["teams"]["home"]["name"],
-                         "away_id": response["teams"]["away"]["id"],
-                         "away": response["teams"]["away"]["name"],
-                         "goals_h": str(response["goals"]["home"]),
-                         "goals_a": str(response["goals"]["away"])
-                         }
-                doc_id = f"{to_db['season']} - {to_db['home']} vs. {to_db['away']}"
-                self.db.collection("fixtures").document(self.today).\
-                    collection(league).document(doc_id).set(to_db)
 
+        for response in fetch_data["response"]:
+            to_db = {"fixture_id": response["fixture"]["id"],
+                     "match_date": self.today,
+                     "match_time": Toolbox().process_game_time(response["fixture"]["date"]),
+                     "venue": response["fixture"]["venue"]["name"],
+                     "status": response["fixture"]["status"]["short"],
+                     "season": str(response["league"]["season"]),
+                     "round": response["league"]["round"],
+                     "home_id": response["teams"]["home"]["id"],
+                     "home": response["teams"]["home"]["name"],
+                     "away_id": response["teams"]["away"]["id"],
+                     "away": response["teams"]["away"]["name"],
+                     "goals_h": str(response["goals"]["home"]),
+                     "goals_a": str(response["goals"]["away"])
+                     }
+            doc_id = f"{to_db['season']} - {to_db['home']} vs. {to_db['away']}"
+            self.db.collection("fixtures").document(self.today).\
+                collection(self.league).document(doc_id).set(to_db)
+            self.db.collection("fixtures").document("dates")\
+                .update({"dates": firestore.ArrayUnion([self.today])})
+
+    # get fixture lineup (once a game, twice if didnt get it the first time)
     def get_fixture_lineups_to_db(self):
         # this function will be operated an hour before the match
         # if lineup not found, it will be called again in 20 min before kickoff
-        for league in self.leagues:
-            # get all saved fixture ids league by league
 
-            # parse all fixture ids from fixture>year>league>fixture>id
-            # save ids as f_ids
-            fixtures = self.db.collection("fixtures").document(self.today)\
-                .collection(league).get()
+        # fetch all players from firebase first
+        players_list = [] # list for player dicts
+        db_players = self.db.collection(f"{self.nseason}").get() # get all player docs
+        for player in db_players:
+            players_list.append(player.to_dict()) # add doc to list
 
-            # iterate through f_ids
-            for e in fixtures:
-                e = e.to_dict()
-                f_id = e["fixture_id"]
-                home = e["home"]
-                away = e["away"]
-                # fetch lineup with f_id
-                url = "https://api-football-v1.p.rapidapi.com/v3/fixtures/lineups"
-                querystring = {"fixture":str(f_id)}
-                headers = {
-                    'x-rapidapi-key': "b56ffa1a8dmshda48f616f1ec5bcp1dc2b2jsn37fbb2fff2ce",
-                    'x-rapidapi-host': "api-football-v1.p.rapidapi.com"
-                }
-                response = requests.request("GET", url, headers=headers, params=querystring)
-                lineup = json.loads(response.text)
+        # print(players_list)
 
-                # iterate through the two teams in api response
+        # get all fixtures of current md
+        fixtures = self.db.collection(f"{self.nseason} Fixtures").document(self.curr_md).get().to_dict()
 
-                for team in lineup["response"]:
-                    team_name = team["team"]["name"]
-                    # parse player ids from team roster doc
-                    players = self.db.collection("roster").document(f"{league} {self.season}").get().to_dict()
-                    p_ids = list(players.keys())
-                    p_ids.remove("INTRO")
-                    # set all player in the team as "B"(bench) first
-                    for p_id in p_ids:
-                        if players[f"{p_id}"]['INFO']["team"] == team_name:
+        # iterate through fixtures and get fixture id
+        for f in fixtures:
+            print(fixtures[f])
+            f_id = fixtures[f]["fixture_id"]
+            home = fixtures[f]["home"]
+            away = fixtures[f]["away"]
+
+            # fetch lineup with f_id
+            url = "https://api-football-v1.p.rapidapi.com/v3/fixtures/lineups"
+            querystring = {"fixture":str(f_id)}
+            headers = {
+                'x-rapidapi-key': "b56ffa1a8dmshda48f616f1ec5bcp1dc2b2jsn37fbb2fff2ce",
+                'x-rapidapi-host': "api-football-v1.p.rapidapi.com"
+            }
+            response = requests.request("GET", url, headers=headers, params=querystring)
+            lineup = json.loads(response.text)
+
+            # iterate through the two teams in api response
+
+            for team in lineup["response"]:
+                team_players = []
+                team_name = team["team"]["name"]
+                # set all player in the team as "B"(bench) first
+                for player in players_list: # iterate thru all players
+                    try:
+                        if player["INFO"]["team"] == team_name:
+                            team_players.append(player["INFO"]["id"])
                             to_db = {
                                 "home": home,
                                 "away": away,
-                                "team": team_name,
+                                "team": team["team"]["name"],
                                 "f_id": f_id,
-                                "id": p_id,
+                                "id": player["INFO"]["id"],
                                 "pos": "B",
                                 "status": "bench",
                                 "minutes": 0,
                                 "rating": 0.0,
                                 "captain": None,
-                                "sub": None,
                                 "offsides": 0,
                                 "shots": 0,
                                 "shot_on_goals": 0,
@@ -320,103 +409,239 @@ class ApiFetch:
                                 "yellow_cards": 0,
                                 "red_cards": 0
                             }
-                            update_data = {f"{p_id}.{self.today}": to_db}
-                            self.db.collection("roster").document(f"{league} {self.season}").update(update_data)
+                            self.db.collection(self.nseason).document(str(player["INFO"]["id"]))\
+                                .update({f"{self.doc_md}":to_db})
+                    except Exception as e:
+                        continue
 
-                    # set starters as sub
-                    for player in team["startXI"]:
+                print(team_players)
+                # set starters as starting
+                for player in team["startXI"]: # iterate thru fetched lineup
+                    p_id = str(player["player"]["id"])
+                    if int(p_id) in team_players:
+                        update_data = {f'{self.doc_md}.pos': player["player"]["pos"]}
+                        self.db.collection(self.nseason).document(p_id).update(update_data)
+                        update_data = {f'{self.doc_md}.status': "starting"}
+                        self.db.collection(self.nseason).document(p_id).update(update_data)
 
-                        p_id =  player["player"]["id"]
-                        update_data = {f'{p_id}.{self.today}.pos': player["player"]["pos"]}
-                        self.db.collection("roster").document(f"{league} {self.season}").update(update_data)
-                        update_data = {f'{p_id}.{self.today}.status': "starting"}
-                        self.db.collection("roster").document(f"{league} {self.season}").update(update_data)
-
-                    # set substitutes as sub
-                    for player in team["substitutes"]:
-
-                        p_id = player["player"]["id"]
-                        update_data = {f'{p_id}.{self.today}.pos': player["player"]["pos"]}
-                        self.db.collection("roster").document(f"{league} {self.season}").update(update_data)
-                        update_data = {f'{p_id}.{self.today}.status': "sub"}
-                        self.db.collection("roster").document(f"{league} {self.season}").update(update_data)
-
-                    print(team_name)
-                print("LINEUP UPDATE COMPLETED")
+                # set substitutes as sub
+                for player in team["substitutes"]:
+                    p_id = str(player["player"]["id"])
+                    if p_id in team_players:
+                        update_data = {f'{self.doc_md}.pos': player["player"]["pos"]}
+                        self.db.collection(self.nseason).document(p_id).update(update_data)
+                        update_data = {f'{self.doc_md}.status': "sub"}
+                        self.db.collection(self.nseason).document(p_id).update(update_data)
+                print(team["team"]["name"])
+            print("LINEUP UPDATE COMPLETED")
 
     def get_fixture_stats_to_db(self):
         # this function will be operated every 30 minute in the game, until 120 minutes
         # in other words, this function will be operated five times per game
-        for league in self.leagues:
-            # get all saved fixture ids league by league
-            # parse all fixture id from fixture>year>league>fixture>id
-            # save ids as f_ids
 
-            fixtures = self.db.collection("fixtures").document(self.today) \
-                .collection(league).get()
-            # iterate through f_ids
-            for e in fixtures:
-                e = e.to_dict()
-                # f_id = e.to_dict()["fixture_id"]
-                f_id = e["fixture_id"]
-                home = e["home"]
-                away = e["away"]
-                url = "https://api-football-v1.p.rapidapi.com/v3/fixtures/players"
-                querystring = {"fixture": f_id}
-                headers = {
-                    'x-rapidapi-key': "b56ffa1a8dmshda48f616f1ec5bcp1dc2b2jsn37fbb2fff2ce",
-                    'x-rapidapi-host': "api-football-v1.p.rapidapi.com"
-                }
-                response = requests.request("GET", url, headers=headers, params=querystring)
-                player_stats = json.loads(response.text)
+        # get all saved fixture ids league by league
+        # parse all fixture id from fixture>year>league>fixture>id
+        # save ids as f_ids
+        fixtures = self.db.collection(f"{self.nseason} Fixtures").document(self.curr_md).get().to_dict()
+        print(fixtures)
+        # iterate through f_ids
+        for f in fixtures:
+            print(f)
+            matchup = fixtures[f]
+            f_id = matchup["fixture_id"]
+            home = matchup["home"]
+            away = matchup["away"]
+            url = "https://api-football-v1.p.rapidapi.com/v3/fixtures/players"
+            querystring = {"fixture": f_id}
+            headers = {
+                'x-rapidapi-key': "b56ffa1a8dmshda48f616f1ec5bcp1dc2b2jsn37fbb2fff2ce",
+                'x-rapidapi-host': "api-football-v1.p.rapidapi.com"
+            }
+            response = requests.request("GET", url, headers=headers, params=querystring)
+            player_stats = json.loads(response.text)
 
-                # iterate through two teams
-                for team_player_stats in player_stats["response"]:
-                    team_name = team_player_stats["team"]["name"]
+            # iterate through two teams
+            for team_player_stats in player_stats["response"]:
+                team_name = team_player_stats["team"]["name"]
 
-                    # iterate through all players
-                    for player in team_player_stats["players"]:
-                        p_id = str(player["player"]["id"])
-                        stats = player["statistics"][0]
-                        status = "substitute" if stats["games"]["substitute"] else "starting"
-                        to_db = {
-                            "f_id": f_id,
-                            "home": home,
-                            "away": away,
-                            "team": team_name,
-                            "minutes": stats["games"]["minutes"],
-                            "rating": stats["games"]["rating"],
-                            "captain": stats["games"]["captain"],
-                            "sub": status,
-                            "offsides": stats["offsides"],
-                            "shots": stats["shots"]["total"],
-                            "shot_on_goals": stats["shots"]["on"],
-                            "goals": stats["goals"]["total"],
-                            "assists": stats["goals"]["assists"],
-                            "saves": stats["goals"]["saves"],
-                            "conceded": stats["goals"]["conceded"],
-                            "passes": stats["passes"]["total"],
-                            "key_passes": stats["passes"]["key"],
-                            "tackles": stats["tackles"]["total"],
-                            "blocks": stats["tackles"]["blocks"],
-                            "interceptions": stats["tackles"]["interceptions"],
-                            "duels": stats["duels"]["total"],
-                            "duels_won": stats["duels"]["won"],
-                            "dribbles": stats["dribbles"]["attempts"],
-                            "dribbles_won": stats["dribbles"]["success"],
-                            "fouls": stats["fouls"]["committed"],
-                            "fouls_drawn": stats["fouls"]["drawn"],
-                            "yellow_cards": stats["cards"]["yellow"],
-                            "red_cards": stats["cards"]["red"]
-                        }
-                        for key, val in to_db.items():
-                            if val is None:
-                                to_db[key] = 0
-                        update_dict = {f"{p_id}.{self.today}":to_db}
-                        print(p_id)
-                        self.db.collection("roster").document(f"{league} {self.season}").update(update_dict)
-                    print(team_name)
-            print(f"{league} GAME STATS UPDATE COMPLETED")
+                # iterate through all players
+                for player in team_player_stats["players"]:
+                    p_id = str(player["player"]["id"])
+                    stats = player["statistics"][0]
+                    status = "sub" if stats["games"]["substitute"] else "starting"
+                    to_db = {
+                        "f_id": f_id,
+                        "home": home,
+                        "away": away,
+                        "team": team_name,
+                        "minutes": stats["games"]["minutes"],
+                        "rating": stats["games"]["rating"],
+                        "captain": stats["games"]["captain"],
+                        "status": status,
+                        "offsides": stats["offsides"],
+                        "shots": stats["shots"]["total"],
+                        "shot_on_goals": stats["shots"]["on"],
+                        "goals": stats["goals"]["total"],
+                        "assists": stats["goals"]["assists"],
+                        "saves": stats["goals"]["saves"],
+                        "conceded": stats["goals"]["conceded"],
+                        "passes": stats["passes"]["total"],
+                        "key_passes": stats["passes"]["key"],
+                        "tackles": stats["tackles"]["total"],
+                        "blocks": stats["tackles"]["blocks"],
+                        "interceptions": stats["tackles"]["interceptions"],
+                        "duels": stats["duels"]["total"],
+                        "duels_won": stats["duels"]["won"],
+                        "dribbles": stats["dribbles"]["attempts"],
+                        "dribbles_won": stats["dribbles"]["success"],
+                        "fouls": stats["fouls"]["committed"],
+                        "fouls_drawn": stats["fouls"]["drawn"],
+                        "yellow_cards": stats["cards"]["yellow"],
+                        "red_cards": stats["cards"]["red"]
+                    }
+                    for key, val in to_db.items():
+                        if val is None:
+                            to_db[key] = 0
+                    update_dict = {f"{self.doc_md}":to_db}
+                    try:
+                        self.db.collection(self.nseason).document(str(p_id)).update(update_dict)
+                    except:
+                        continue
+                    print(p_id)
+                print(team_name)
+
+    def recalculate_recent_stats(self):
+        players = self.db.collection(f"{self.leagues[0]} {self.season}").get()
+        for player in players:
+            player_data = player.to_dict()
+            game_dates = [key for key in player_data.keys()]
+            for gd in game_dates: # remove non dates keys
+                if ord(gd[0])!=50:
+                    game_dates.remove(gd)
+
+            game_dates.sort(reverse=True)
+
+            # Season
+            default = {'passes': 0.0, 'minutes': 0.0, 'fouls': 0.0, 'rating': 0.0, 'duels': 0.0, 'yellow_cards': 0.0, 'shots': 0.0, 'fouls_drawn': 0.0, 'offsides': 0.0, 'conceded': 0.0, 'dribbles': 0.0, 'blocks': 0.0, 'duels_won': 0.0, 'saves': 0.0, 'shot_on_goals': 0.0, 'tackles': 0.0, 'assists': 0.0, 'dribbles_won': 0.0, 'key_passes': 0.0, 'red_cards': 0.0, 'goals': 0.0, 'interceptions': 0.0}
+            temp_total = {'Season': default, 'Last10': default, 'Last5': default, 'Last3': default}
+            for i in range(len(game_dates)):
+                gd = game_dates[i]
+                for key in player_data[gd].keys():
+                    if (type(player_data[gd][key]) == int or type(player_data[gd][key]) == float) \
+                            and key not in ["age","f_id","id"]:
+                        temp_total["Season"][key] += player_data[gd][key]
+                        if i<10: temp_total["Last10"][key] += player_data[gd][key]
+                        if i<5: temp_total["Last5"][key] += player_data[gd][key]
+                        if i<3: temp_total["Last3"][key] += player_data[gd][key]
+            self.db.collection(f"{self.leagues[0]} {self.season}").document(str(player_data["INFO"]["id"])).update(temp_total)
+            print(temp_total)
+            print(player_data["INFO"]["id"])
 
     def testflight(self):
         pass
+
+    def find_all_teams(self):
+        # find all team ids from league, using "Teams informations" endpoint
+        # Getting ids allows db to find the team current sqauds more easily
+        # See: "get_team_ids" and "find_all_team_squads"
+        url = "https://api-football-v1.p.rapidapi.com/v3/teams"
+        querystring = {"league":self.league_id,"season":self.season}
+        headers = {
+            'x-rapidapi-host': "api-football-v1.p.rapidapi.com",
+            'x-rapidapi-key': "b56ffa1a8dmshda48f616f1ec5bcp1dc2b2jsn37fbb2fff2ce"
+        }
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        data = json.loads(response.text)
+        for team in data["response"]:
+            self.db.collection("Team_IDs").document(self.nseason)\
+                .update({team["team"]["name"].replace(" ","_"):team["team"]["id"]})
+        return "Team IDs found"
+
+    def get_team_ids(self):
+        team_ids = self.db.collection("Team_IDs").document(self.nseason).get().to_dict()
+        return team_ids
+
+    def add_all_team_squads(self):
+        # find all team squads by iterating thru team ids
+        url = "https://api-football-v1.p.rapidapi.com/v3/players/squads"
+        for team in self.team_ids:
+            querystring = {"team":self.team_ids[team]}
+            headers = { 'x-rapidapi-host': "api-football-v1.p.rapidapi.com",
+                'x-rapidapi-key': "b56ffa1a8dmshda48f616f1ec5bcp1dc2b2jsn37fbb2fff2ce"}
+            response = requests.request("GET", url, headers=headers, params=querystring)
+            # get response dada
+            players = json.loads(response.text)
+            # In response, idx 0 is the team info
+            # idx 1 is a dict with "players" as key and a list of  players dicts as value
+            # find player id for document id and the rest of info for the INFO value
+            for plr in players["response"][0]["players"]:
+                try:
+                    self.db.collection(self.nseason).document(str(plr["id"]))\
+                        .update({"INFO.status":"active"})
+                    print(plr["id"])
+                except Exception as e:
+                    self.db.collection(self.nseason).document(str(plr["id"])) \
+                        .set({"INFO":{"id":str(plr['id']),"name":plr["name"]}})
+                    self.db.collection("new").document(str(plr["id"]))\
+                        .set({"INFO":{"id":str(plr['id']),"name":plr["name"]}})
+
+    def get_injuries(self):
+        url = "https://api-football-v1.p.rapidapi.com/v3/injuries"
+        querystring = {"league":self.league_id,"season":self.season,"date":self.today}
+        headers = {
+            'x-rapidapi-host': "api-football-v1.p.rapidapi.com",
+            'x-rapidapi-key': "b56ffa1a8dmshda48f616f1ec5bcp1dc2b2jsn37fbb2fff2ce"
+        }
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        data = json.loads(response.text)["response"]
+        self.db.collection("Injuries").document(self.today).set({"checked":True})
+        for item in data:
+            item.pop("league")
+            print(item)
+            self.db.collection("Injuries").document(self.today)\
+                .update({str(item["player"]["id"]):item})
+        self.db.collection("Injuries").document(self.today).update({"checked":firestore.DELETE_FIELD})
+
+    def update_latest_stats(self):
+        all_players = self.db.collection(self.nseason).get()
+        for player in all_players:
+            player = player.to_dict()
+            p_id = str(player["INFO"]["id"])
+            p_stats = self.db.collection(self.nseason).document(p_id).get().to_dict()
+            tb = Toolbox()
+            cats = tb.cats
+            mds = tb.get_mds_desc(p_stats)
+            to_db = {"Last3":{},"Last3A":{},"Last5":{},"Last5A":{},
+                     "Last10":{},"Last10A":{},"Season":{},"SeasonA":{}}
+            for cat in cats:
+                # last 3
+                games3 = len([(p_stats[md]["minutes"]) for md in mds[:3] if (p_stats[md]["minutes"])!=0])
+                ttl3 = round(sum([float(p_stats[md][cat]) for md in mds[:3]]),2)
+                avg3 = 0 if games3==0 else round((ttl3/games3),2)
+                to_db["Last3"][cat] = ttl3
+                to_db["Last3A"][cat] = avg3
+    
+                # last 5
+                games5 = len([(p_stats[md]["minutes"]) for md in mds[:5] if (p_stats[md]["minutes"])!=0])
+                ttl5 = round(sum([float(p_stats[md][cat]) for md in mds[:5]]),2)
+                avg5 = 0 if games5==0 else round((ttl5/games5),2)
+                to_db["Last5"][cat] = ttl5
+                to_db["Last5A"][cat] = avg5
+    
+                # last 10
+                games10 = len([(p_stats[md]["minutes"]) for md in mds[:10] if (p_stats[md]["minutes"])!=0])
+                ttl10 = sum([float(p_stats[md][cat]) for md in mds[:10]])
+                avg10 = 0 if games10==0 else round((ttl10/games10),2)
+                to_db["Last10"][cat] = ttl10
+                to_db["Last10A"][cat] = avg10
+    
+            # season
+                gamesS = len([(p_stats[md]["minutes"]) for md in mds if (p_stats[md]["minutes"])!=0])
+                ttlS = sum([float(p_stats[md][cat]) for md in mds])
+                avgS = 0 if gamesS==0 else round((ttlS/gamesS),2)
+                to_db["Season"][cat] = ttlS
+                to_db["SeasonA"][cat] = avgS
+    
+            self.db.collection(self.nseason).document(p_id).update(to_db)
+            print(p_id, player["INFO"]["name"])
+
